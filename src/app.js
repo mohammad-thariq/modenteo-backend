@@ -22,7 +22,7 @@ let corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(
-  "/api.modenteo/v1",
+  "/v1",
   userRoutes,
   categoriesRoutes,
   subCategoriesRoutes,
