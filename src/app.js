@@ -6,6 +6,7 @@ import categoriesRoutes from "./models/Categories/categories.router.js";
 import subCategoriesRoutes from "./models/SubCategories/subCategories.router.js";
 import childCategoriesRoutes from "./models/ChildCategories/childCategories.router.js";
 import brandsRoutes from "./models/Brands/brands.router.js";
+import productsRoutes from "./models/Products/products.router.js";
 import ServerEnvironmentConfig from "./config/server.config.js";
 import fileUpload from "express-fileupload";
 
@@ -27,7 +28,8 @@ app.use(
   categoriesRoutes,
   subCategoriesRoutes,
   childCategoriesRoutes,
-  brandsRoutes
+  brandsRoutes,
+  productsRoutes
 );
 
 app.get("/", (req, res) => {
