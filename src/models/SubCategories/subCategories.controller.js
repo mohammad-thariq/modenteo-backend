@@ -6,8 +6,9 @@ import {
   getBySubCategoryId,
   getSubCategories,
   getSubCategoriesByStatus,
-  updateSubCategory,
+  updateSubCategory,getSubCategoryByCatgoryId
 } from "./subCategories.service.js";
+import { getByCategorySlug } from "../Categories/categories.service.js";
 
 export const createSubCategory = (req, res) => {
   const body = req.body;
@@ -136,4 +137,42 @@ export const deleteSubCategoryById = (req, res) => {
       message: "Sub categories deleted successfully",
     });
   });
+};
+
+export const getSubCategoryByCategoryId = (req, res) => {
+  const id = req.params.id;
+  getByCategorySlug(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        error: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        error: "Record not found",
+      });
+    }
+    getSubCategoryByCatgoryId(results?.id, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+      if (!results) {
+        return res.status(404).json({
+          success: 0,
+          message: "Record not found",
+        });
+      }
+      return res.status(200).json({
+        success: 1,
+        data: results,
+      });
+    });
+  });
+
+
 };

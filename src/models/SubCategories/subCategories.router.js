@@ -5,7 +5,7 @@ import {
   getAllSubCategories,
   getSubCategoryById,
   getSubCategoryByStatus,
-  updateSubCategoryById,
+  updateSubCategoryById,getSubCategoryByCategoryId
 } from "./subCategories.controller.js";
 import authenticateToken from "../../middleware/auth/authMiddleWare.js";
 
@@ -25,5 +25,6 @@ router.delete(
   authenticateToken,
   deleteSubCategoryById
 );
+router.get("/category/subcategory/:id", getSubCategoryByCategoryId);
 
 export default router;

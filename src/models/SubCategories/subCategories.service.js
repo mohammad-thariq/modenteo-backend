@@ -65,7 +65,18 @@ export const updateSubCategory = (data, id, callBack) => {
     }
   );
 };
-
+export const getSubCategoryByCatgoryId = (id, callBack) => {
+  db.query(
+    `SELECT id, category, name, slug, status, image   FROM sub_categories WHERE category = ? and status=1`,
+    [id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+};
 export const deleteSubCategory = (data, callBack) => {
   db.query(
     `DELETE FROM sub_categories WHERE sub_categories.id=?`,
