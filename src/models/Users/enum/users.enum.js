@@ -1,0 +1,1 @@
+export const validateType = ['super-admin', 'admin', 'user']
