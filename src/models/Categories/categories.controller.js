@@ -48,7 +48,6 @@ export const createCategory = (req, res) => {
       }
     }
   );
-
 };
 
 export const getCategoryByStatus = (req, res) => {

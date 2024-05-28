@@ -1,5 +1,6 @@
 import { tableNames } from "../../database/tables/index.js";
 import { getUploadFile } from "../../middleware/fileUpload/uploadfiles.js";
+import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import {
   create,
   deleteBrand,
@@ -12,26 +13,38 @@ import {
 export const createBrands = (req, res) => {
   const body = req.body;
   const files = req.files;
-  getUploadFile(files, tableNames.BRANDS, (err, result) => {
-    if (err) {
-      console.log(err);
-      return res.status(400).json(err);
-    }
-    body.image = result;
-    create(body, (err, results) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({
-          success: 0,
-          message: "Database connection error",
+  getValidateByName(
+    body.name,
+    tableNames.BRANDS,
+    async (err, nameAvailable) => {
+      if (nameAvailable && nameAvailable.length > 0) {
+        return await res.status(400).json({
+          error: `${body.name} name Already Taken`,
+        });
+      } else {
+        getUploadFile(files, tableNames.BRANDS, (err, result) => {
+          if (err) {
+            console.log(err);
+            return res.status(400).json(err);
+          }
+          body.image = result;
+          create(body, (err, results) => {
+            if (err) {
+              console.log(err);
+              return res.status(500).json({
+                success: 0,
+                message: "Database connection error",
+              });
+            }
+            return res.status(200).json({
+              success: 1,
+              data: results,
+            });
+          });
         });
       }
-      return res.status(200).json({
-        success: 1,
-        data: results,
-      });
-    });
-  });
+    }
+  );
 };
 
 export const getBrandsById = (req, res) => {

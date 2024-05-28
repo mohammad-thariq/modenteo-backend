@@ -1,9 +1,10 @@
 import db from "../../database/index.js";
+import { getSlugwithName } from "../../utils/getSlugforAll.js";
 
 export const create = (data, callBack) => {
   db.query(
     `INSERT INTO categories (name, slug, status, image) VALUES (?, ?, ?, ?)`,
-    [data.name, data.slug, data.status, data.image],
+    [data.name, getSlugwithName(data.name), data.status, data.image],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -67,7 +68,7 @@ export const getCategoriesByStatus = (callBack) => {
 export const updateCategory = (data, id, callBack) => {
   db.query(
     `UPDATE categories SET name = ?, slug = ?, status = ?, image = ? WHERE id = ?`,
-    [data.name, data.slug, data.status, data.image, id],
+    [data.name, getSlugwithName(data.name), data.status, data.image, id],
     (error, results) => {
       if (error) {
         return callBack(error);

@@ -1,9 +1,16 @@
 import db from "../../database/index.js";
+import { getSlugwithName } from "../../utils/getSlugforAll.js";
 
 export const create = (data, callBack) => {
   db.query(
     `INSERT INTO child_categories (category, sub_category, name, slug, status, image) VALUES (?, ?, ?, ?, ?)`,
-    [data.category, data.name, data.slug, data.status, data?.image],
+    [
+      data.category,
+      data.name,
+      getSlugwithName(data.name),
+      data.status,
+      data?.image,
+    ],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -55,7 +62,14 @@ export const getChildCategories = (callBack) => {
 export const updateChildCategory = (data, id, callBack) => {
   db.query(
     `UPDATE child_categories SET category = ?, sub_category = ?, name = ?, slug = ?, status = ?, image = ? WHERE id = ?`,
-    [data.category, data.name, data.slug, data.status, data.image, id],
+    [
+      data.category,
+      data.name,
+      getSlugwithName(data.name),
+      data.status,
+      data.image,
+      id,
+    ],
     (error, results) => {
       if (error) {
         return callBack(error);

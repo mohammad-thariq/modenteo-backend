@@ -1,9 +1,16 @@
 import db from "../../database/index.js";
+import { getSlugwithName } from "../../utils/getSlugforAll.js";
 
 export const create = (data, callBack) => {
   db.query(
     `INSERT INTO sub_categories (category, name, slug, status, image) VALUES (?, ?, ?, ?, ?)`,
-    [data.category, data.name, data.slug, data.status, data.image],
+    [
+      data.category,
+      data.name,
+      getSlugwithName(data.name),
+      data.status,
+      data.image,
+    ],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -39,9 +46,9 @@ export const getSubCategoriesByStatus = (callBack) => {
   );
 };
 
-export const getSubCategories = (callBack) => {
+export const getSubCategories = (data, callBack) => {
   db.query(
-    `SELECT id, category, name, slug, status, image FROM sub_categories`,
+    `SELECT id, category, name, slug, status, image FROM sub_categories LIMIT ${data.limit} OFFSET ${data.offset}`,
     [],
     (error, results) => {
       if (error) {
@@ -56,7 +63,14 @@ export const updateSubCategory = (data, id, callBack) => {
   console.log(data, "data");
   db.query(
     `UPDATE sub_categories SET category = ?, name = ?, slug = ?, status = ?, image = ? WHERE id = ?`,
-    [data.category, data.name, data.slug, data.status, data.image, id],
+    [
+      data.category,
+      data.name,
+      getSlugwithName(data.name),
+      data.status,
+      data.image,
+      id,
+    ],
     (error, results) => {
       if (error) {
         return callBack(error);
