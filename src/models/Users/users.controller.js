@@ -122,6 +122,27 @@ export const getUserById = (req, res) => {
   });
 };
 
+export const getUserByEmail = (req, res) => {
+  const email = req.params.email;
+  getUserByUserEmail(email, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        error: commonNotificationMessage.error.server,
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        error: userNotificationMessage.error.not_found,
+      });
+    }
+    results.password = undefined;
+    return res.status(200).json({
+      data: results,
+    });
+  });
+};
+
 export const getAllUsers = (req, res) => {
   const query = req.query;
   getPaginated(query, tableNames.USERS, (err, result, pagination) => {
