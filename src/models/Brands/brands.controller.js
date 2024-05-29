@@ -1,5 +1,6 @@
 import { tableNames } from "../../database/tables/index.js";
 import { getUploadFile } from "../../middleware/fileUpload/uploadfiles.js";
+import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import {
   create,
@@ -71,7 +72,7 @@ export const getBrandsById = (req, res) => {
 };
 
 export const getBrandByStatus = (req, res) => {
-  getBrandsByStatus((err, results) => {
+  getDataByStatus(tableNames.BRANDS, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -85,17 +86,29 @@ export const getBrandByStatus = (req, res) => {
 };
 
 export const getAllBrands = (req, res) => {
-  getBrands((err, results) => {
+  const query = req.query;
+
+  getPaginated(query, tableNames.BRANDS, (err, result, pagination) => {
     if (err) {
       console.log(err);
-      return res.status(500).json({
-        success: 0,
-        message: "Database connection error",
-      });
+      return res.status(404).json(err);
     }
-    return res.status(200).json({
-      success: 1,
-      data: results,
+    getBrands(result, async (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+      return res.status(200).json({
+        brands: results,
+        pagination: {
+          totalPage: pagination,
+          page: Number(query.page),
+          limit: Number(query.limit),
+        },
+      });
     });
   });
 };

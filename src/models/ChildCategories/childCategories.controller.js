@@ -1,12 +1,15 @@
 import { tableNames } from "../../database/tables/index.js";
 import { getUploadFile } from "../../middleware/fileUpload/uploadfiles.js";
+import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
+import { getPaginated } from "../../middleware/pagination/paginated.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
+import { getByCategoryId } from "../Categories/categories.service.js";
+import { getBySubCategoryId } from "../SubCategories/subCategories.service.js";
 import {
   create,
   deleteChildCategory,
   getByChildCategoryId,
   getChildCategories,
-  getChildCategoriesByStatus,
   updateChildCategory,
 } from "./childCategories.service.js";
 
@@ -71,7 +74,7 @@ export const getChildCategoryById = (req, res) => {
 };
 
 export const getChildCategoryByStatus = (req, res) => {
-  getChildCategoriesByStatus((err, results) => {
+  getDataByStatus(tableNames.CHILDCATEGORIES, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -85,17 +88,79 @@ export const getChildCategoryByStatus = (req, res) => {
 };
 
 export const getAllChildCategories = (req, res) => {
-  getChildCategories((err, results) => {
+  const query = req.query;
+
+  getPaginated(query, tableNames.CHILDCATEGORIES, (err, result, pagination) => {
     if (err) {
       console.log(err);
-      return res.status(500).json({
-        success: 0,
-        message: "Database connection error",
-      });
+      return res.status(404).json(err);
     }
-    return res.status(200).json({
-      success: 1,
-      data: results,
+    getChildCategories(result, async (err, childCategories) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+
+      try {
+        const childCategoriesWithDetails = await Promise.all(
+          childCategories.map(async (childCategory) => {
+            return new Promise((resolve, reject) => {
+              getByCategoryId(childCategory.category_id, (err, category) => {
+                if (err) {
+                  console.log(err);
+                  return reject({
+                    error: "Database connection error",
+                  });
+                }
+                if (!category) {
+                  return reject({
+                    error: "Category not found",
+                  });
+                }
+
+                // Add the category to the child category
+                childCategory.category = category;
+
+                // Now fetch the sub-category
+                getBySubCategoryId(
+                  childCategory.sub_category_id,
+                  (err, subCategory) => {
+                    if (err) {
+                      console.log(err);
+                      return reject({
+                        error: "Database connection error",
+                      });
+                    }
+                    if (!subCategory) {
+                      return reject({
+                        error: "Sub-category not found",
+                      });
+                    }
+
+                    // Add the sub-category to the child category
+                    childCategory.sub_category = subCategory;
+                    resolve(childCategory);
+                  }
+                );
+              });
+            });
+          })
+        );
+
+        return res.status(200).json({
+          child_categories: childCategoriesWithDetails,
+          pagination: {
+            totalPage: pagination,
+            page: Number(query.page),
+            limit: Number(query.limit),
+          },
+        });
+      } catch (error) {
+        return res.status(500).json(error);
+      }
     });
   });
 };

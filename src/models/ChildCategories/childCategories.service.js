@@ -3,9 +3,10 @@ import { getSlugwithName } from "../../utils/getSlugforAll.js";
 
 export const create = (data, callBack) => {
   db.query(
-    `INSERT INTO child_categories (category, sub_category, name, slug, status, image) VALUES (?, ?, ?, ?, ?)`,
+    `INSERT INTO child_categories (category_id, sub_category_id, name, slug, status, image) VALUES (?, ?, ?, ?, ?, ?)`,
     [
-      data.category,
+      data.category_id,
+      data.sub_category_id,
       data.name,
       getSlugwithName(data.name),
       data.status,
@@ -22,7 +23,7 @@ export const create = (data, callBack) => {
 
 export const getByChildCategoryId = (id, callBack) => {
   db.query(
-    `SELECT id, category, sub_category, name, slug, status, image FROM child_categories WHERE id = ?`,
+    `SELECT id, category_id, sub_category_id, name, slug, status, image FROM child_categories WHERE id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -33,22 +34,9 @@ export const getByChildCategoryId = (id, callBack) => {
   );
 };
 
-export const getChildCategoriesByStatus = (callBack) => {
+export const getChildCategories = (data, callBack) => {
   db.query(
-    `SELECT * FROM child_categories WHERE status=${1}`,
-    [],
-    (error, results) => {
-      if (error) {
-        return callBack(error);
-      }
-      return callBack(null, results);
-    }
-  );
-};
-
-export const getChildCategories = (callBack) => {
-  db.query(
-    `SELECT id, category, sub_category, name, slug, status, image FROM child_categories`,
+    `SELECT id, category_id, sub_category_id, name, slug, status, image FROM child_categories LIMIT ${data.limit} OFFSET ${data.offset}`,
     [],
     (error, results) => {
       if (error) {
@@ -61,9 +49,10 @@ export const getChildCategories = (callBack) => {
 
 export const updateChildCategory = (data, id, callBack) => {
   db.query(
-    `UPDATE child_categories SET category = ?, sub_category = ?, name = ?, slug = ?, status = ?, image = ? WHERE id = ?`,
+    `UPDATE child_categories SET category_id = ?, sub_category_id = ?, name = ?, slug = ?, status = ?, image = ? WHERE id = ?`,
     [
-      data.category,
+      data.category_id,
+      data.sub_category_id,
       data.name,
       getSlugwithName(data.name),
       data.status,

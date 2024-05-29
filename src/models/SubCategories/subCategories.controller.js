@@ -10,8 +10,12 @@ import {
   updateSubCategory,
   getSubCategoryByCatgoryId,
 } from "./subCategories.service.js";
-import { getByCategorySlug } from "../Categories/categories.service.js";
+import {
+  getByCategoryId,
+  getByCategorySlug,
+} from "../Categories/categories.service.js";
 import { getPaginated } from "../../middleware/pagination/paginated.js";
+import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
 
 export const createSubCategory = (req, res) => {
   const body = req.body;
@@ -73,8 +77,44 @@ export const getSubCategoryById = (req, res) => {
   });
 };
 
+export const getSubCategoryByCategoryId = (req, res) => {
+  const id = req.params.id;
+  getByCategorySlug(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        error: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        error: "Record not found",
+      });
+    }
+    getSubCategoryByCatgoryId(results?.id, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+      if (!results) {
+        return res.status(404).json({
+          success: 0,
+          message: "Record not found",
+        });
+      }
+      return res.status(200).json({
+        success: 1,
+        data: results,
+      });
+    });
+  });
+};
+
 export const getSubCategoryByStatus = (req, res) => {
-  getSubCategoriesByStatus((err, results) => {
+  getDataByStatus(tableNames.SUBCATEGORIES, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -87,44 +127,61 @@ export const getSubCategoryByStatus = (req, res) => {
   });
 };
 
-// export const getAllSubCategories = (req, res) => {
-//   getSubCategories((err, results) => {
-//     if (err) {
-//       console.log(err);
-//       return res.status(500).json({
-//         success: 0,
-//         message: "Database connection error",
-//       });
-//     }
-//     return res.status(200).json({
-//       success: 1,
-//       data: results,
-//     });
-//   });
-// };
-
 export const getAllSubCategories = (req, res) => {
   const query = req.query;
+
   getPaginated(query, tableNames.SUBCATEGORIES, (err, result, pagination) => {
     if (err) {
       console.log(err);
       return res.status(404).json(err);
     }
-    getSubCategories(result, (err, results) => {
+
+    // Fetch subcategories
+    getSubCategories(result, async (err, subCategories) => {
       if (err) {
         console.log(err);
         return res.status(500).json({
           message: "Database connection error",
         });
       }
-      return res.status(200).json({
-        sub_categories: results,
-        pagination: {
-          totalPage: pagination,
-          page: Number(query.page),
-          limit: Number(query.limit),
-        },
-      });
+
+      // For each subcategory, fetch the associated category
+      try {
+        const subCategoriesWithCategories = await Promise.all(
+          subCategories.map(async (subCategory) => {
+            return new Promise((resolve, reject) => {
+              getByCategoryId(subCategory.category_id, (err, category) => {
+                if (err) {
+                  console.log(err);
+                  return reject({
+                    error: "Database connection error",
+                  });
+                }
+                if (!category) {
+                  return reject({
+                    error: "Record not found",
+                  });
+                }
+
+                // Embed category data into the subcategory object
+                subCategory.category = category;
+                resolve(subCategory);
+              });
+            });
+          })
+        );
+
+        return res.status(200).json({
+          sub_categories: subCategoriesWithCategories,
+          pagination: {
+            totalPage: pagination,
+            page: Number(query.page),
+            limit: Number(query.limit),
+          },
+        });
+      } catch (error) {
+        return res.status(500).json(error);
+      }
     });
   });
 };
@@ -176,42 +233,6 @@ export const deleteSubCategoryById = (req, res) => {
     return res.status(200).json({
       success: 1,
       message: "Sub categories deleted successfully",
-    });
-  });
-};
-
-export const getSubCategoryByCategoryId = (req, res) => {
-  const id = req.params.id;
-  getByCategorySlug(id, (err, results) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({
-        error: "Database connection error",
-      });
-    }
-    if (!results) {
-      return res.status(404).json({
-        error: "Record not found",
-      });
-    }
-    getSubCategoryByCatgoryId(results?.id, (err, results) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({
-          success: 0,
-          message: "Database connection error",
-        });
-      }
-      if (!results) {
-        return res.status(404).json({
-          success: 0,
-          message: "Record not found",
-        });
-      }
-      return res.status(200).json({
-        success: 1,
-        data: results,
-      });
     });
   });
 };

@@ -27,18 +27,9 @@ export const getByBrandsId = (id, callBack) => {
   );
 };
 
-export const getBrandsByStatus = (callBack) => {
-  db.query(`SELECT * FROM brands WHERE status=${1}`, [], (error, results) => {
-    if (error) {
-      return callBack(error);
-    }
-    return callBack(null, results);
-  });
-};
-
-export const getBrands = (callBack) => {
+export const getBrands = (data, callBack) => {
   db.query(
-    `SELECT id, name, slug, status, image FROM brands`,
+    `SELECT id, name, slug, status, image FROM brands LIMIT ${data.limit} OFFSET ${data.offset}`,
     [],
     (error, results) => {
       if (error) {

@@ -1,6 +1,7 @@
 //   import UserEnvironmentConfig from "../../config/env.config.js";
 import { tableNames } from "../../database/tables/index.js";
 import { getUploadFile } from "../../middleware/fileUpload/uploadfiles.js";
+import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
 import { getPaginated } from "../../middleware/pagination/paginated.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import {
@@ -8,9 +9,8 @@ import {
   deleteCategory,
   getByCategoryId,
   getCategories,
-  getCategoriesByStatus,
   updateCategory,
-  getCategoriesWithSubcategory
+  getCategoriesWithSubcategory,
 } from "./categories.service.js";
 
 export const createCategory = (req, res) => {
@@ -51,7 +51,7 @@ export const createCategory = (req, res) => {
 };
 
 export const getCategoryByStatus = (req, res) => {
-  getCategoriesByStatus((err, results) => {
+  getDataByStatus(tableNames.CATEGORIES, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -76,21 +76,31 @@ export const getCategoryWithSubcategory = (req, res) => {
 
     for (const cat of results) {
       if (response[cat?.id]) {
-        response[cat?.id].subCategory.push({ "id": cat?.subcategoryID, "name": cat?.subcatName, "slug": cat?.subcatSlug });
+        response[cat?.id].subCategory.push({
+          id: cat?.subcategoryID,
+          name: cat?.subcatName,
+          slug: cat?.subcatSlug,
+        });
       } else {
         response[cat?.id] = {
-          "id": cat?.id,
-          "categoryName": cat?.name,
-          "categorySlug": cat?.slug,
-          "image": cat?.image,
-          "isOpen": false,
-          "subCategory": [{ "id": cat?.subcategoryID, "name": cat?.subcatName, "slug": cat?.subcatSlug }]
+          id: cat?.id,
+          categoryName: cat?.name,
+          categorySlug: cat?.slug,
+          image: cat?.image,
+          isOpen: false,
+          subCategory: [
+            {
+              id: cat?.subcategoryID,
+              name: cat?.subcatName,
+              slug: cat?.subcatSlug,
+            },
+          ],
         };
       }
     }
     const responseArray = Object.values(response);
     return res.status(200).json({
-      response: responseArray
+      response: responseArray,
     });
   });
 };

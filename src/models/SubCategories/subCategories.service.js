@@ -3,9 +3,9 @@ import { getSlugwithName } from "../../utils/getSlugforAll.js";
 
 export const create = (data, callBack) => {
   db.query(
-    `INSERT INTO sub_categories (category, name, slug, status, image) VALUES (?, ?, ?, ?, ?)`,
+    `INSERT INTO sub_categories (category_id, name, slug, status, image) VALUES (?, ?, ?, ?, ?)`,
     [
-      data.category,
+      data.category_id,
       data.name,
       getSlugwithName(data.name),
       data.status,
@@ -22,7 +22,7 @@ export const create = (data, callBack) => {
 
 export const getBySubCategoryId = (id, callBack) => {
   db.query(
-    `SELECT id, category, name, slug, status, image FROM sub_categories WHERE id = ?`,
+    `SELECT id, category_id, name, slug, status, image FROM sub_categories WHERE id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -48,7 +48,7 @@ export const getSubCategoriesByStatus = (callBack) => {
 
 export const getSubCategories = (data, callBack) => {
   db.query(
-    `SELECT id, category, name, slug, status, image FROM sub_categories LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT id, category_id, name, slug, status, image FROM sub_categories LIMIT ${data.limit} OFFSET ${data.offset}`,
     [],
     (error, results) => {
       if (error) {
@@ -60,11 +60,10 @@ export const getSubCategories = (data, callBack) => {
 };
 
 export const updateSubCategory = (data, id, callBack) => {
-  console.log(data, "data");
   db.query(
-    `UPDATE sub_categories SET category = ?, name = ?, slug = ?, status = ?, image = ? WHERE id = ?`,
+    `UPDATE sub_categories SET category_id = ?, name = ?, slug = ?, status = ?, image = ? WHERE id = ?`,
     [
-      data.category,
+      data.category_id,
       data.name,
       getSlugwithName(data.name),
       data.status,
@@ -79,9 +78,10 @@ export const updateSubCategory = (data, id, callBack) => {
     }
   );
 };
+
 export const getSubCategoryByCatgoryId = (id, callBack) => {
   db.query(
-    `SELECT id, category, name, slug, status, image   FROM sub_categories WHERE category = ? and status=1`,
+    `SELECT id, category_id, name, slug, status, image   FROM sub_categories WHERE category_id = ? and status=1`,
     [id],
     (error, results) => {
       if (error) {
@@ -91,6 +91,7 @@ export const getSubCategoryByCatgoryId = (id, callBack) => {
     }
   );
 };
+
 export const deleteSubCategory = (data, callBack) => {
   db.query(
     `DELETE FROM sub_categories WHERE sub_categories.id=?`,
