@@ -10,10 +10,15 @@ import productsRoutes from "./models/Products/products.router.js";
 import ServerEnvironmentConfig from "./config/server.config.js";
 import fileUpload from "express-fileupload";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(fileUpload());
+const publicPath = path.join(__dirname, "../public");
+app.use(express.static(publicPath));
 
 let corsOptions = {
   origin: "*",
