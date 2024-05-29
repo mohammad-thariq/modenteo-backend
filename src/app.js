@@ -9,6 +9,7 @@ import brandsRoutes from "./models/Brands/brands.router.js";
 import productsRoutes from "./models/Products/products.router.js";
 import ServerEnvironmentConfig from "./config/server.config.js";
 import fileUpload from "express-fileupload";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
