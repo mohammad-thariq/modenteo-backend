@@ -7,7 +7,6 @@ import {
   deleteBrand,
   getByBrandsId,
   getBrands,
-  getBrandsByStatus,
   updateBrand,
 } from "./brands.service.js";
 
