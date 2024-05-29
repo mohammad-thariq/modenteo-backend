@@ -1,6 +1,7 @@
 import { tableNames } from "../../database/tables/index.js";
 import { getUploadFile } from "../../middleware/fileUpload/uploadfiles.js";
 import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
+import { getPaginated } from "../../middleware/pagination/paginated.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import {
   create,

@@ -157,11 +157,11 @@ export const getAllSubCategories = (req, res) => {
                     error: "Database connection error",
                   });
                 }
-                if (!category) {
-                  return reject({
-                    error: "Record not found",
-                  });
-                }
+                // if (!category) {
+                //   return reject({
+                //     error: "Record not found",
+                //   });
+                // }
 
                 // Embed category data into the subcategory object
                 subCategory.category = category;
