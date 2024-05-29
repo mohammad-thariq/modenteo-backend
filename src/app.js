@@ -1,5 +1,7 @@
 import express from "express";
 import "../src/database/index.js";
+import express from "express";
+import path from "path";
 import cors from "cors";
 import userRoutes from "./models/Users/users.router.js";
 import categoriesRoutes from "./models/Categories/categories.router.js";
