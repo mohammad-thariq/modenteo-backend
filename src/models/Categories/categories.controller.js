@@ -1,6 +1,6 @@
 //   import UserEnvironmentConfig from "../../config/env.config.js";
 import { tableNames } from "../../database/tables/index.js";
-import { getUploadFile } from "../../middleware/fileUpload/uploadfiles.js";
+import { getUploadFile,  base64ToFileObject } from "../../middleware/fileUpload/uploadfiles.js";
 import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
 import { getPaginated } from "../../middleware/pagination/paginated.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
@@ -15,7 +15,8 @@ import {
 
 export const createCategory = (req, res) => {
   const body = req.body;
-  const files = req.files;
+  let files = req.files;
+  let imageFile;
   getValidateByName(
     body.name,
     tableNames.CATEGORIES,
@@ -25,6 +26,16 @@ export const createCategory = (req, res) => {
           error: `${body.name} name Already Taken`,
         });
       } else {
+        if (!files || files.length === 0) {
+          const base64Image = body.image;
+          if (base64Image) {
+            imageFile = base64ToFileObject(base64Image);
+            if (imageFile instanceof Error) {
+              return res.status(400).json({ success: 0, message: imageFile.message });
+            }
+            files = { image: imageFile };
+          }
+        }
         getUploadFile(files, tableNames.CATEGORIES, (err, result) => {
           if (err) {
             console.log(err);
