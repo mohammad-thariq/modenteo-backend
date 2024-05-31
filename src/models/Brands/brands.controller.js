@@ -13,7 +13,6 @@ import {
 
 export const createBrands = (req, res) => {
   const body = req.body;
-  const files = req.files;
   getValidateByName(
     body.name,
     tableNames.BRANDS,
@@ -23,7 +22,7 @@ export const createBrands = (req, res) => {
           error: `${body.name} name Already Taken`,
         });
       } else {
-        getUploadFile(files, tableNames.BRANDS, (err, result) => {
+        getUploadFile(body, tableNames.BRANDS, (err, result) => {
           if (err) {
             console.log(err);
             return res.status(400).json(err);
@@ -117,8 +116,7 @@ export const updateBrandsById = (req, res) => {
   const params = req.params;
   const body = req.body;
   console.log(params, "params");
-  const files = req.files;
-  getUploadFile(files, tableNames.BRANDS, (err, result) => {
+  getUploadFile(body, tableNames.BRANDS, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);

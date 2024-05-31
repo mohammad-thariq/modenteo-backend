@@ -15,7 +15,6 @@ import {
 
 export const createChildCategory = (req, res) => {
   const body = req.body;
-  const files = req.files;
   getValidateByName(
     body.name,
     tableNames.CHILDCATEGORIES,
@@ -25,7 +24,7 @@ export const createChildCategory = (req, res) => {
           error: `${body.name} name Already Taken`,
         });
       } else {
-        getUploadFile(files, tableNames.CATEGORIES, (err, result) => {
+        getUploadFile(body, tableNames.CATEGORIES, (err, result) => {
           if (err) {
             console.log(err);
             return res.status(400).json(err);
@@ -169,8 +168,7 @@ export const updateChildCategoryById = (req, res) => {
   const params = req.params;
   const body = req.body;
   console.log(params, "params");
-  const files = req.files;
-  getUploadFile(files, tableNames.CATEGORIES, (err, result) => {
+  getUploadFile(body, tableNames.CATEGORIES, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);
