@@ -3,6 +3,7 @@ import "../src/database/index.js";
 import path from "path";
 import cors from "cors";
 import userRoutes from "./models/Users/users.router.js";
+import menuRoutes from "./models/Menu/menu.router.js";
 import categoriesRoutes from "./models/Categories/categories.router.js";
 import subCategoriesRoutes from "./models/SubCategories/subCategories.router.js";
 import childCategoriesRoutes from "./models/ChildCategories/childCategories.router.js";
@@ -32,6 +33,7 @@ app.use(cors(corsOptions));
 app.use(
   "/v1",
   userRoutes,
+  menuRoutes,
   categoriesRoutes,
   subCategoriesRoutes,
   childCategoriesRoutes,

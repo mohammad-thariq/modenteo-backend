@@ -6,7 +6,6 @@ import {
   getCategoryById,
   getCategoryByStatus,
   updateCategoryById,
-  getCategoryWithSubcategory,
 } from "./categories.controller.js";
 import authenticateToken from "../../middleware/auth/authMiddleWare.js";
 
@@ -18,6 +17,5 @@ router.get("/categories/:id", authenticateToken, getCategoryById);
 router.patch("/categories/update/:id", authenticateToken, updateCategoryById);
 router.delete("/categories/delete/:id", authenticateToken, deleteCategoryById);
 router.get("/list/categories",getCategoryByStatus);
-router.get("/menu-categories",getCategoryWithSubcategory);
 
 export default router;
