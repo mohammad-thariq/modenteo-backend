@@ -5,6 +5,6 @@ import {
 
 const router = express.Router();
 
-router.get("/menu-categories",getCategoryWithSubcategory);
+router.get("/menu/categories",getCategoryWithSubcategory);
 
 export default router;
