@@ -42,6 +42,15 @@ export const getUploadFile = (body, table_name, callBack) => {
         return res.status(400).json({ success: 0, message: imageFile.message });
       }
       files = { image: imageFile };
+    } else {
+      let url = body.image;
+      let baseUrl = process.env.BASEURL;
+      const modifiedUrl = url.replace(baseUrl, "");
+
+      return callBack(
+        null,
+        modifiedUrl
+      );
     }
   }
   let sampleFile;
