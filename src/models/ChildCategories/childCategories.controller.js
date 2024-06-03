@@ -15,38 +15,26 @@ import {
 
 export const createChildCategory = (req, res) => {
   const body = req.body;
-  getValidateByName(
-    body.name,
-    tableNames.CHILDCATEGORIES,
-    async (err, nameAvailable) => {
-      if (nameAvailable && nameAvailable.length > 0) {
-        return await res.status(400).json({
-          error: `${body.name} name Already Taken`,
-        });
-      } else {
-        getUploadFile(body, tableNames.CHILDCATEGORIES, (err, result) => {
-          if (err) {
-            console.log(err);
-            return res.status(400).json(err);
-          }
-          body.image = result;
-          create(body, (err, results) => {
-            if (err) {
-              console.log(err);
-              return res.status(500).json({
-                success: 0,
-                message: "Database connection error",
-              });
-            }
-            return res.status(200).json({
-              success: 1,
-              data: results,
-            });
-          });
+  getUploadFile(body, tableNames.CHILDCATEGORIES, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json(err);
+    }
+    body.image = result;
+    create(body, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
         });
       }
-    }
-  );
+      return res.status(200).json({
+        success: 1,
+        data: results,
+      });
+    });
+  });
 };
 
 export const getChildCategoryById = (req, res) => {
