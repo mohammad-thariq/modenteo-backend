@@ -2,27 +2,27 @@ import { tableNames } from "../../database/tables/index.js";
 import { getUploadFile } from "../../middleware/fileUpload/uploadfiles.js";
 import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
 import { getPaginated } from "../../middleware/pagination/paginated.js";
-import { getCollectionsById } from "../Collections/collections.controller.js";
+import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import {
   create,
-  deleteProducts,
-  getByProductsId,
-  getProducts,
-  updateProducts,
-} from "./products.service.js";
+  deleteCollection,
+  getByCollectionsId,
+  getCollections,
+  updateCollection,
+} from "./collections.service.js";
 
-export const createProducts = (req, res) => {
+export const createCollections = (req, res) => {
   const body = req.body;
   getValidateByName(
     body.name,
-    tableNames.PRODUCTS,
+    tableNames.COLLECTIONS,
     async (err, nameAvailable) => {
       if (nameAvailable && nameAvailable.length > 0) {
         return await res.status(400).json({
           error: `${body.name} name Already Taken`,
         });
       } else {
-        getUploadFile(body, tableNames.PRODUCTS, (err, result) => {
+        getUploadFile(body, tableNames.COLLECTIONS, (err, result) => {
           if (err) {
             console.log(err);
             return res.status(400).json(err);
@@ -32,11 +32,13 @@ export const createProducts = (req, res) => {
             if (err) {
               console.log(err);
               return res.status(500).json({
+                success: 0,
                 message: "Database connection error",
               });
             }
             return res.status(200).json({
-              products: results,
+              success: 1,
+              data: results,
             });
           });
         });
@@ -45,28 +47,31 @@ export const createProducts = (req, res) => {
   );
 };
 
-export const getProductsById = (req, res) => {
+export const getCollectionsById = (req, res) => {
   const id = req.params.id;
-  getByProductsId(id, (err, results) => {
+  getByCollectionsId(id, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
+        success: 0,
         message: "Database connection error",
       });
     }
     if (!results) {
       return res.status(404).json({
+        success: 0,
         message: "Record not found",
       });
     }
     return res.status(200).json({
-      products: results,
+      success: 1,
+      data: results,
     });
   });
 };
 
-export const getProductsByStatus = (req, res) => {
-  getDataByStatus(tableNames.PRODUCTS, async (err, results) => {
+export const getCollectionByStatus = (req, res) => {
+  getDataByStatus(tableNames.COLLECTIONS, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -74,118 +79,85 @@ export const getProductsByStatus = (req, res) => {
       });
     }
     return res.status(200).json({
-      products: results,
+      child_categories: results,
     });
   });
 };
 
-export const getAllProducts = (req, res) => {
+export const getAllCollections = (req, res) => {
   const query = req.query;
-  getPaginated(query, tableNames.PRODUCTS, (err, result, pagination) => {
+
+  getPaginated(query, tableNames.COLLECTIONS, (err, result, pagination) => {
     if (err) {
       console.log(err);
       return res.status(404).json(err);
     }
-    getProducts(result, async (err, products) => {
+    getCollections(result, async (err, results) => {
       if (err) {
         console.log(err);
         return res.status(500).json({
+          success: 0,
           message: "Database connection error",
         });
       }
-
-      try {
-        const productsWithDetails = await Promise.all(
-          products.map(async (product) => {
-            return new Promise((resolve, reject) => {
-              // Fetch category details
-              getByCategoryId(product.category_id, (err, category) => {
-                product.category = category;
-
-                // Fetch sub-category details
-                getBySubCategoryId(
-                  product.sub_category_id,
-                  (err, subCategory) => {
-                    product.sub_category = subCategory;
-
-                    // Fetch child-category details
-                    getCollectionsById(
-                      product.collection_id,
-                      (err, collection) => {
-                        product.collection_id = collection;
-
-                        // Fetch brand details
-                        getBrandsById(product.brand_id, (err, brand) => {
-                          product.brand = brand;
-
-                          // Resolve the product with all details
-                          resolve(product);
-                        });
-                      }
-                    );
-                  }
-                );
-              });
-            });
-          })
-        );
-
-        return res.status(200).json({
-          products: productsWithDetails,
-          pagination: {
-            totalPage: pagination,
-            page: Number(query.page),
-            limit: Number(query.limit),
-          },
-        });
-      } catch (error) {
-        return res.status(500).json(error);
-      }
+      return res.status(200).json({
+        collections: results,
+        pagination: {
+          totalPage: pagination,
+          page: Number(query.page),
+          limit: Number(query.limit),
+        },
+      });
     });
   });
 };
 
-export const updateProductsById = (req, res) => {
+export const updateCollectionsById = (req, res) => {
   const params = req.params;
   const body = req.body;
   console.log(params, "params");
-  getUploadFile(body, tableNames.PRODUCTS, (err, result) => {
+  getUploadFile(body, tableNames.COLLECTIONS, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);
     }
     body.image = result;
-    updateProducts(body, params.id, (err, results) => {
+    updateCollection(body, params.id, (err, results) => {
       console.log(results, "results");
       if (err) {
         console.log(err);
         return res.status(500).json({
+          success: 0,
           message: "Database connection error",
         });
       }
       return res.status(200).json({
+        success: 1,
         message: "Updated successfully",
       });
     });
   });
 };
 
-export const deleteProductsById = (req, res) => {
+export const deleteCollectionsById = (req, res) => {
   const data = req.params;
-  deleteProducts(data, (err, results) => {
+  deleteCollection(data, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
+        success: 0,
         message: "Database connection error",
       });
     }
     if (!results.affectedRows) {
       return res.status(404).json({
+        success: 0,
         message: "Record not found",
       });
     }
     return res.status(200).json({
-      message: "Child categories deleted successfully",
+      success: 1,
+      message: "Collections deleted successfully",
     });
   });
 };

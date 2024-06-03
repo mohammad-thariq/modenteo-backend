@@ -6,7 +6,6 @@ import userRoutes from "./models/Users/users.router.js";
 import menuRoutes from "./models/Menu/menu.router.js";
 import categoriesRoutes from "./models/Categories/categories.router.js";
 import subCategoriesRoutes from "./models/SubCategories/subCategories.router.js";
-import childCategoriesRoutes from "./models/ChildCategories/childCategories.router.js";
 import brandsRoutes from "./models/Brands/brands.router.js";
 import productsRoutes from "./models/Products/products.router.js";
 import ServerEnvironmentConfig from "./config/server.config.js";
@@ -36,7 +35,6 @@ app.use(
   menuRoutes,
   categoriesRoutes,
   subCategoriesRoutes,
-  childCategoriesRoutes,
   brandsRoutes,
   productsRoutes
 );
@@ -45,14 +43,7 @@ app.use('/upload', express.static(path.join(__dirname, 'upload')));
 app.get("/", (req, res) => {
   res.send("<h1>Api Working Fine</h1>");
 });
-// app.get('/upload/:imageName', (req, res) => {
-//   const imageName = req.params.imageName;
-//   console.log(imageName,'imageName');
-//   console.log(__dirname,'__dirname');
-// res.send("<p>imageName-"+imageName+"</p><p>__dirname-"+__dirname+"</p>")
-//   // Send the image file
-//   // res.sendFile(__dirname + `/upload/${imageName}`);
-// });
+
 
 app.listen(
   ServerEnvironmentConfig.server.line === "production"

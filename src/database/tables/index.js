@@ -5,4 +5,6 @@ export const tableNames = {
   CHILDCATEGORIES: "child_categories",
   BRANDS: "brands",
   PRODUCTS: "products",
+  COLLECTIONS: "collections",
+
 };
