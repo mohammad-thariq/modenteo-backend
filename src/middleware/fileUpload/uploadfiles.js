@@ -63,6 +63,7 @@ export const getUploadFile = (body, table_name, callBack) => {
     );
     const binaryData = Buffer.from(base64Data, 'base64');
     fs.writeFile(filePath, binaryData, (err) => {
+      console.log(err,'errr1')
       if (err) {
         return callBack({
           error: "Problem in Uploading Image",
