@@ -36,13 +36,8 @@ export const getUploadFile = (body, table_name, callBack) => {
   let imageFile;
   if (!files || files.length === 0) {
     const base64Image = body.image;
-    if (base64Image) {
-      imageFile = base64ToFileObject(base64Image);
-      if (imageFile instanceof Error) {
-        return res.status(400).json({ success: 0, message: imageFile.message });
-      }
-      files = { image: imageFile };
-    } else {
+    console.log(base64Image,'base64Image')
+    if(base64Image.includes(process.env.BASEURL)){
       let url = body.image;
       let baseUrl = process.env.BASEURL;
       const modifiedUrl = url.replace(baseUrl, "");
@@ -51,6 +46,14 @@ export const getUploadFile = (body, table_name, callBack) => {
         null,
         modifiedUrl
       );
+    }else{
+      imageFile = base64ToFileObject(base64Image);
+      if (imageFile instanceof Error) {
+        return callBack({
+          error: "Problem in Image file",
+        });
+      }
+      files = { image: imageFile };
     }
   }
   let sampleFile;
