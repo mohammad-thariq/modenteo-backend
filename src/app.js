@@ -44,14 +44,14 @@ app.use(
 app.get("/", (req, res) => {
   res.send("<h1>Api Working Fine</h1>");
 });
-app.get('/upload/:imageName', (req, res) => {
-  const imageName = req.params.imageName;
-  console.log(imageName,'imageName');
-  console.log(__dirname,'__dirname');
-res.send("<p>imageName-"+imageName+"</p><p>__dirname-"+__dirname+"</p>")
-  // Send the image file
-  // res.sendFile(__dirname + `/upload/${imageName}`);
-});
+// app.get('/upload/:imageName', (req, res) => {
+//   const imageName = req.params.imageName;
+//   console.log(imageName,'imageName');
+//   console.log(__dirname,'__dirname');
+// res.send("<p>imageName-"+imageName+"</p><p>__dirname-"+__dirname+"</p>")
+//   // Send the image file
+//   // res.sendFile(__dirname + `/upload/${imageName}`);
+// });
 
 app.listen(
   ServerEnvironmentConfig.server.line === "production"
