@@ -108,37 +108,12 @@ export const getAllChildCategories = (req, res) => {
           childCategories.map(async (childCategory) => {
             return new Promise((resolve, reject) => {
               getByCategoryId(childCategory.category_id, (err, category) => {
-                if (err) {
-                  console.log(err);
-                  return reject({
-                    error: "Database connection error",
-                  });
-                }
-                if (!category) {
-                  return reject({
-                    error: "Category not found",
-                  });
-                }
-
                 // Add the category to the child category
                 childCategory.category = category;
-
                 // Now fetch the sub-category
                 getBySubCategoryId(
                   childCategory.sub_category_id,
                   (err, subCategory) => {
-                    if (err) {
-                      console.log(err);
-                      return reject({
-                        error: "Database connection error",
-                      });
-                    }
-                    if (!subCategory) {
-                      return reject({
-                        error: "Sub-category not found",
-                      });
-                    }
-
                     // Add the sub-category to the child category
                     childCategory.sub_category = subCategory;
                     resolve(childCategory);
