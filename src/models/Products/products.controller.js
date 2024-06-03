@@ -99,66 +99,22 @@ export const getAllProducts = (req, res) => {
             return new Promise((resolve, reject) => {
               // Fetch category details
               getByCategoryId(product.category_id, (err, category) => {
-                if (err) {
-                  console.log(err);
-                  return reject({
-                    error: "Database connection error",
-                  });
-                }
-                if (!category) {
-                  return reject({
-                    error: "Category not found",
-                  });
-                }
                 product.category = category;
 
                 // Fetch sub-category details
                 getBySubCategoryId(
                   product.sub_category_id,
                   (err, subCategory) => {
-                    if (err) {
-                      console.log(err);
-                      return reject({
-                        error: "Database connection error",
-                      });
-                    }
-                    if (!subCategory) {
-                      return reject({
-                        error: "Sub-category not found",
-                      });
-                    }
                     product.sub_category = subCategory;
 
                     // Fetch child-category details
                     getChildCategoryById(
                       product.child_category_id,
                       (err, childCategory) => {
-                        if (err) {
-                          console.log(err);
-                          return reject({
-                            error: "Database connection error",
-                          });
-                        }
-                        if (!childCategory) {
-                          return reject({
-                            error: "Child-category not found",
-                          });
-                        }
                         product.child_category = childCategory;
 
                         // Fetch brand details
                         getBrandsById(product.brand_id, (err, brand) => {
-                          if (err) {
-                            console.log(err);
-                            return reject({
-                              error: "Database connection error",
-                            });
-                          }
-                          if (!brand) {
-                            return reject({
-                              error: "Brand not found",
-                            });
-                          }
                           product.brand = brand;
 
                           // Resolve the product with all details
