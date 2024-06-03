@@ -48,7 +48,6 @@ export const getUploadFile = (body, table_name, callBack) => {
   // };
 
   const base64ToFileObject = (dataURI, callBack) => {
-    console.log(dataURI, 'dataURIdataURI')
     const base64Data = dataURI.split(';base64,').pop();
     let imgName = Date.now()+'.jpg';
 
@@ -63,7 +62,6 @@ export const getUploadFile = (body, table_name, callBack) => {
     );
     const binaryData = Buffer.from(base64Data, 'base64');
     fs.writeFile(filePath, binaryData, (err) => {
-      console.log(err,'errr1')
       if (err) {
         return callBack({
           error: "Problem in Uploading Image",
@@ -78,7 +76,6 @@ export const getUploadFile = (body, table_name, callBack) => {
 
   let files = body.files;
   let imageFile;
-  console.log(files, 'filesfiles')
   const base64Image = body.image;
   if(base64Image == undefined){
     return callBack({
