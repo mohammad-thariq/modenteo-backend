@@ -80,6 +80,11 @@ export const getUploadFile = (body, table_name, callBack) => {
   let imageFile;
   console.log(files, 'filesfiles')
   const base64Image = body.image;
+  if(base64Image == undefined){
+    return callBack({
+      error: "Image missing",
+    });
+  }
   if (!files || files.length === 0) {
     if (base64Image != undefined && base64Image.includes(process.env.BASEURL)) {
       let url = body.image;
