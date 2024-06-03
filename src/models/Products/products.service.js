@@ -3,7 +3,7 @@ import { getSlugwithName } from "../../utils/getSlugforAll.js";
 
 export const create = (data, callBack) => {
   db.query(
-    `INSERT INTO products (image, short_name, name, slug, category_id, sub_category_id, child_category_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, best_product) VALUES (?, ?, ?, ?, ?)`,
+    `INSERT INTO products (image, short_name, name, slug, category_id, sub_category_id, child_category_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, best_product featured_product) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       data?.image,
       data?.short_name,
@@ -26,6 +26,7 @@ export const create = (data, callBack) => {
       data.top_product,
       data.new_arrival,
       data.best_product,
+      data.featured_product,
     ],
     (error, results) => {
       if (error) {
@@ -38,7 +39,7 @@ export const create = (data, callBack) => {
 
 export const getByProductsId = (id, callBack) => {
   db.query(
-    `SELECT id, image, short_name, name, slug, category_id, sub_category_id, child_category_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, best_product FROM products WHERE id = ?`,
+    `SELECT id, image, short_name, name, slug, category_id, sub_category_id, child_category_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, best_product, featured_product FROM products WHERE id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -51,7 +52,7 @@ export const getByProductsId = (id, callBack) => {
 
 export const getProducts = (data, callBack) => {
   db.query(
-    `SELECT id, image, short_name, name, slug, category_id, sub_category_id, child_category_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, best_product FROM products LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT id, image, short_name, name, slug, category_id, sub_category_id, child_category_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, best_product, featured_product FROM products LIMIT ${data.limit} OFFSET ${data.offset}`,
     [],
     (error, results) => {
       if (error) {
@@ -64,7 +65,7 @@ export const getProducts = (data, callBack) => {
 
 export const updateProducts = (data, id, callBack) => {
   db.query(
-    `UPDATE products SET image = ?, short_name = ?, name = ?, slug = ?, category_id = ?, sub_category_id = ?, child_category_id = ?, brand_id = ?, sku = ?, price = ?, offer_price = ?, stock_quantity = ?, weight = ?, short_description = ?, long_description = ?, status = ?, seo_title = ?, seo_description = ?, top_product = ?, new_arrival = ?, best_product = ? WHERE id = ?`,
+    `UPDATE products SET image = ?, short_name = ?, name = ?, slug = ?, category_id = ?, sub_category_id = ?, child_category_id = ?, brand_id = ?, sku = ?, price = ?, offer_price = ?, stock_quantity = ?, weight = ?, short_description = ?, long_description = ?, status = ?, seo_title = ?, seo_description = ?, top_product = ?, new_arrival = ?, best_product = ?, featured_product = ?, WHERE id = ?`,
     [
       data?.image,
       data?.short_name,
@@ -87,6 +88,7 @@ export const updateProducts = (data, id, callBack) => {
       data.top_product,
       data.new_arrival,
       data.best_product,
+      data.featured_product,
       id,
     ],
     (error, results) => {

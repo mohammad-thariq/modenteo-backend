@@ -9,6 +9,9 @@ import subCategoriesRoutes from "./models/SubCategories/subCategories.router.js"
 import childCategoriesRoutes from "./models/ChildCategories/childCategories.router.js";
 import brandsRoutes from "./models/Brands/brands.router.js";
 import productsRoutes from "./models/Products/products.router.js";
+import BannerRoutes from "./models/ManageWebsite/HomePageBaner/homePageBanner.router.js"
+import SpotLightRoutes from "./models/ManageWebsite/SpotLight/spotLight.router.js"
+import ServiceRoutes from "./models/ManageWebsite/CustomerService/service.router.js"
 import ServerEnvironmentConfig from "./config/server.config.js";
 import fileUpload from "express-fileupload";
 import { fileURLToPath } from "url";
@@ -38,7 +41,10 @@ app.use(
   subCategoriesRoutes,
   childCategoriesRoutes,
   brandsRoutes,
-  productsRoutes
+  productsRoutes,
+  BannerRoutes,
+  SpotLightRoutes,
+  ServiceRoutes
 );
 app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
