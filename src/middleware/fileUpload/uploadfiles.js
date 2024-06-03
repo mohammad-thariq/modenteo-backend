@@ -26,15 +26,22 @@ export const getUploadFile = (body, table_name, callBack) => {
       mimetype: matches[1],
       md5: md5Hash,
       mv: (destination, callback) => {
-        fs.unlink(destination, (err) => {
-          if (err) {
-            console.error('Error deleting file:', err);
-          } else {
-            console.log('File successfully deleted!');
-          }
-        });
-        console.log(destination, 'destinationdestination')
-        fs.writeFile(destination, buffer, callback);
+        if (fs.existsSync(destination)) {
+          fs.unlink(destination, (err) => {
+            if (err) {
+              console.error('Error deleting file:', err);
+            } else {
+              console.log('File successfully deleted!');
+            }
+          });
+          console.log(destination, 'destinationdestination')
+          fs.writeFile(destination, buffer, callback);
+
+        } else {
+          console.log(destination, 'destinationdestination')
+          fs.writeFile(destination, buffer, callback);
+
+        }
       }
     };
   };
