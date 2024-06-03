@@ -48,9 +48,9 @@ app.get('/upload/:imageName', (req, res) => {
   const imageName = req.params.imageName;
   console.log(imageName,'imageName');
   console.log(__dirname,'__dirname');
-
+res.send("<p>imageName-"+imageName+"</p><p>__dirname-"+__dirname+"</p>")
   // Send the image file
-  res.sendFile(__dirname + `/upload/${imageName}`);
+  // res.sendFile(__dirname + `/upload/${imageName}`);
 });
 
 app.listen(
