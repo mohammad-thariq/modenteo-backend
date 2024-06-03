@@ -28,7 +28,7 @@ let corsOptions = {
   credentials: true,
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(
   "/v1",
@@ -40,7 +40,7 @@ app.use(
   brandsRoutes,
   productsRoutes
 );
-app.use('/upload', express.static(path.join(__dirname, 'upload')));
+// app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
 app.get("/", (req, res) => {
   res.send("<h1>Api Working Fine</h1>");
