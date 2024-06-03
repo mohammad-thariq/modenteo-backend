@@ -1,6 +1,8 @@
 import {
-  getCategoriesWithSubcategory,getSubcategorywithChildCategories
+  getCategoriesWithSubcategory, getSubcategorywithChildCategories
 } from "./menu.service.js";
+import { tableNames } from "../../database/tables/index.js";
+import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
 
 export const getCategoryWithSubcategory = (req, res) => {
   getCategoriesWithSubcategory(async (err, results) => {
@@ -83,3 +85,25 @@ export const getSubcategoryWithChildcategory = (req, res) => {
     });
   });
 };
+
+
+export const getSeasonCollections = (req, res) => {
+  getDataByStatus(tableNames.CATEGORIES, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        error: "Database connection error",
+      });
+    }
+    return res.status(200).json({
+      response: results,
+    });
+  });
+}
+export const getNew = (req, res) => {
+  let newMenu = [{ id: "1", name: "New Arrivals", slug: "new-arrivals" }, { id: "2", name: "Top Products", slug: "top-products" }, { id: "3", name: "Best Selling", slug: "best-selling" }, { id: "4", name: "Featured Products", slug: "featured-products" }];
+  return res.status(200).json({
+    response: newMenu,
+  });
+
+}
