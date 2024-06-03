@@ -26,6 +26,13 @@ export const getUploadFile = (body, table_name, callBack) => {
       mimetype: matches[1],
       md5: md5Hash,
       mv: (destination, callback) => {
+        fs.unlink(destination, (err) => {
+          if (err) {
+            console.error('Error deleting file:', err);
+          } else {
+            console.log('File successfully deleted!');
+          }
+        });
         console.log(destination, 'destinationdestination')
         fs.writeFile(destination, buffer, callback);
       }
@@ -36,8 +43,8 @@ export const getUploadFile = (body, table_name, callBack) => {
   let imageFile;
   if (!files || files.length === 0) {
     const base64Image = body.image;
-    console.log(base64Image,'base64Image')
-    if(base64Image.includes(process.env.BASEURL)){
+    console.log(base64Image, 'base64Image')
+    if (base64Image.includes(process.env.BASEURL)) {
       let url = body.image;
       let baseUrl = process.env.BASEURL;
       const modifiedUrl = url.replace(baseUrl, "");
@@ -46,7 +53,7 @@ export const getUploadFile = (body, table_name, callBack) => {
         null,
         modifiedUrl
       );
-    }else{
+    } else {
       imageFile = base64ToFileObject(base64Image);
       if (imageFile instanceof Error) {
         return callBack({
