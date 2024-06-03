@@ -40,6 +40,7 @@ app.use(
   brandsRoutes,
   productsRoutes
 );
+app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
 app.get("/", (req, res) => {
   res.send("<h1>Api Working Fine</h1>");
