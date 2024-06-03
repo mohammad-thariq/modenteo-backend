@@ -17,7 +17,7 @@ export const getUploadFile = (body, table_name, callBack) => {
     const md5Hash = crypto.createHash('md5').update(buffer).digest('hex');
 
     return {
-      name: `image.${fileType}`,
+      name: Date.now() + '.' + fileType,
       data: buffer,
       size: buffer.length,
       encoding: '7bit',
@@ -26,6 +26,7 @@ export const getUploadFile = (body, table_name, callBack) => {
       mimetype: matches[1],
       md5: md5Hash,
       mv: (destination, callback) => {
+        console.log(destination, 'destinationdestination')
         if (fs.existsSync(destination)) {
           fs.unlink(destination, (err) => {
             if (err) {
