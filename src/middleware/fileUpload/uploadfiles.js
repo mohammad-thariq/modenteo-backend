@@ -41,6 +41,7 @@ export const getUploadFile = (req, table_name, callBack) => {
     if (base64Image == undefined) {
       return callBack({
         error: "Image missing",
+        data: body?.data
       });
     }
     if (base64Image != undefined && base64Image.includes(process.env.BASEURL)) {
