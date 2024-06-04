@@ -53,7 +53,7 @@ export const getUploadFile = (req, table_name, callBack) => {
       return base64ToFileObject(base64Image, callBack);
     }
   }
-  if (files.length > 0) {
+  else if (files && files.length >= 0) {
     let sampleFile;
     let uploadPath;
     if (!files || Object.keys(files).length === 0) {
