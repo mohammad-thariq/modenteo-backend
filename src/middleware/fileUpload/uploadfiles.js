@@ -37,16 +37,15 @@ export const getUploadFile = (req, table_name, callBack) => {
   let body = req.body;
   console.log(files, 'filesfiles')
   if (!files || files.length === 0) {
-    const base64Image = body.image;
+    const base64Image = body.image || body?.data?.image;
     if (base64Image == undefined) {
       return callBack({
         error: "Image missing",
       });
     }
     if (base64Image != undefined && base64Image.includes(process.env.BASEURL)) {
-      let url = body.image;
       let baseUrl = process.env.BASEURL;
-      const modifiedUrl = url.replace(baseUrl, "");
+      const modifiedUrl = base64Image.replace(baseUrl, "");
 
       return callBack(
         null,
