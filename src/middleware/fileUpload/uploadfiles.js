@@ -53,33 +53,35 @@ export const getUploadFile = (req, table_name, callBack) => {
       return base64ToFileObject(base64Image, callBack);
     }
   }
-  let sampleFile;
-  let uploadPath;
-  if (!files || Object.keys(files).length === 0) {
-    return callBack({ error: "No files were uploaded." });
-  }
-
-  sampleFile = files;
-  let imgName = Date.now() + '-' + sampleFile.image.name + '.jpg';
-
-  uploadPath = path.join(
-    __dirname,
-    "..",
-    "..",
-    "..",
-    "public",
-    "upload",
-    `${table_name}-${imgName}`
-  );
-  sampleFile.image.mv(uploadPath, function (err) {
-    if (err) {
-      return callBack({
-        error: "Problem in Uploading Image",
-      });
+  if (files.length > 0) {
+    let sampleFile;
+    let uploadPath;
+    if (!files || Object.keys(files).length === 0) {
+      return callBack({ error: "No files were uploaded." });
     }
-    return callBack(
-      null,
-      `/${"upload"}/${table_name}-${imgName}`
+
+    sampleFile = files;
+    let imgName = Date.now() + '-' + sampleFile.image.name + '.jpg';
+
+    uploadPath = path.join(
+      __dirname,
+      "..",
+      "..",
+      "..",
+      "public",
+      "upload",
+      `${table_name}-${imgName}`
     );
-  });
+    sampleFile.image.mv(uploadPath, function (err) {
+      if (err) {
+        return callBack({
+          error: "Problem in Uploading Image",
+        });
+      }
+      return callBack(
+        null,
+        `/${"upload"}/${table_name}-${imgName}`
+      );
+    });
+  }
 };
