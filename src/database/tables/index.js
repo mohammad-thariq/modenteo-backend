@@ -6,5 +6,9 @@ export const tableNames = {
   BRANDS: "brands",
   PRODUCTS: "products",
   COLLECTIONS: "collections",
-
+  MANAGEWEBSITE: {
+    BANNER: "banner",
+    SPOTLIGHT: "spot_light",
+    CUSTOMERSERVICE: "customer_service"
+  }
 };

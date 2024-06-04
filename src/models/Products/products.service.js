@@ -26,6 +26,7 @@ export const create = (data, callBack) => {
       data.top_product,
       data.new_arrival,
       data.best_product,
+      data.featured_product,
     ],
     (error, results) => {
       if (error) {
@@ -87,6 +88,7 @@ export const updateProducts = (data, id, callBack) => {
       data.top_product,
       data.new_arrival,
       data.best_product,
+      data.featured_product,
       id,
     ],
     (error, results) => {
