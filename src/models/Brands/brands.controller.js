@@ -79,7 +79,7 @@ export const getBrandByStatus = (req, res) => {
       });
     }
     return res.status(200).json({
-      child_categories: results,
+      brands: results,
     });
   });
 };
