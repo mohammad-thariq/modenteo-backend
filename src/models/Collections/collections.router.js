@@ -11,7 +11,7 @@ const router = express.Router();
 router.post("/collections/create", authenticateToken, createCollections);
 router.get("/collections", authenticateToken, getAllCollections);
 router.get("/collections/:id", authenticateToken, getCollectionsById);
-router.get("/list/collections", authenticateToken, getCollectionByStatus);
+router.get("/list/collections", getCollectionByStatus);
 router.patch("/collections/update/:id", authenticateToken, updateCollectionsById);
 router.delete("/collections/delete/:id", authenticateToken, deleteCollectionsById);
 

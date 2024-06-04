@@ -12,16 +12,3 @@ export const getCategoriesWithSubcategory = (callBack) => {
     }
   );
 };
-
-export const getSubcategorywithChildCategories = (callBack) => {
-  db.query(
-    `SELECT s.id, s.slug, s.name, s.image, c.id as childcatID, c.name as childcatName, c.slug as childcatSlug FROM sub_categories s LEFT JOIN child_categories c ON s.id = c.sub_category_id where s.status = 1 and c.status=1;`,
-    [],
-    (error, results) => {
-      if (error) {
-        return callBack(error);
-      }
-      return callBack(null, results);
-    }
-  );
-};

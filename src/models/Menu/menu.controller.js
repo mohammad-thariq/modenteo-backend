@@ -1,6 +1,4 @@
-import {
-  getCategoriesWithSubcategory, getSubcategorywithChildCategories
-} from "./menu.service.js";
+import { getCategoriesWithSubcategory } from "./menu.service.js";
 import { tableNames } from "../../database/tables/index.js";
 import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
 
@@ -45,50 +43,9 @@ export const getCategoryWithSubcategory = (req, res) => {
   });
 };
 
-export const getSubcategoryWithChildcategory = (req, res) => {
-  getSubcategorywithChildCategories(async (err, results) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({
-        error: "Database connection error",
-      });
-    }
-    let response = {};
-
-    for (const subcat of results) {
-      if (response[subcat?.id]) {
-        response[subcat?.id].childCategory.push({
-          id: subcat?.childcatID,
-          name: subcat?.childcatName,
-          slug: subcat?.childcatSlug,
-        });
-      } else {
-        response[subcat?.id] = {
-          id: subcat?.id,
-          categoryName: subcat?.name,
-          categorySlug: subcat?.slug,
-          image: subcat?.image,
-          isOpen: false,
-          childCategory: [
-            {
-              id: subcat?.childcatID,
-              name: subcat?.childcatName,
-              slug: subcat?.childcatSlug,
-            },
-          ],
-        };
-      }
-    }
-    const responseArray = Object.values(response);
-    return res.status(200).json({
-      response: responseArray,
-    });
-  });
-};
-
 
 export const getSeasonCollections = (req, res) => {
-  getDataByStatus(tableNames.CATEGORIES, (err, results) => {
+  getDataByStatus(tableNames.COLLECTIONS, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -100,6 +57,7 @@ export const getSeasonCollections = (req, res) => {
     });
   });
 }
+
 export const getNew = (req, res) => {
   let newMenu = [{ id: "1", name: "New Arrivals", slug: "new-arrivals" }, { id: "2", name: "Top Products", slug: "top-products" }, { id: "3", name: "Best Selling", slug: "best-selling" }, { id: "4", name: "Featured Products", slug: "featured-products" }];
   return res.status(200).json({
