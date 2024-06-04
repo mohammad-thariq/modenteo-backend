@@ -3,20 +3,20 @@ import { getSlugwithName } from "../../utils/getSlugforAll.js";
 
 export const create = (data, callBack) => {
   db.query(
-    `INSERT INTO products (image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, best_product) VALUES (?, ?, ?, ?, ?)`,
+    `INSERT INTO products (image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, best_product) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       data?.image,
       data?.short_name,
       data.name,
       getSlugwithName(data.name),
-      data.category_id,
-      data.sub_category_id,
-      data.collection_id,
-      data.brand_id,
+      data.category,
+      data.sub_category,
+      data.collection,
+      data.brand,
       data.sku,
       data.price,
       data.offer_price,
-      data.stock_quantity,
+      data.quantity,
       data.weight,
       data.short_description,
       data.long_description,

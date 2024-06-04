@@ -19,38 +19,26 @@ import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
 
 export const createSubCategory = (req, res) => {
   const body = req.body;
-  getValidateByName(
-    body.name,
-    tableNames.SUBCATEGORIES,
-    async (err, nameAvailable) => {
-      if (nameAvailable && nameAvailable.length > 0) {
-        return await res.status(400).json({
-          error: `${body.name} name Already Taken`,
-        });
-      } else {
-        getUploadFile(req, tableNames.SUBCATEGORIES, (err, result) => {
-          if (err) {
-            console.log(err);
-            return res.status(400).json(err);
-          }
-          body.image = result;
-          create(body, (err, results) => {
-            if (err) {
-              console.log(err);
-              return res.status(500).json({
-                success: 0,
-                message: "Database connection error",
-              });
-            }
-            return res.status(200).json({
-              success: 1,
-              data: results,
-            });
-          });
+  getUploadFile(req, tableNames.SUBCATEGORIES, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json(err);
+    }
+    body.image = result;
+    create(body, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
         });
       }
-    }
-  );
+      return res.status(200).json({
+        success: 1,
+        data: results,
+      });
+    });
+  });
 };
 
 export const getSubCategoryById = (req, res) => {

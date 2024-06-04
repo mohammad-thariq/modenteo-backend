@@ -10,6 +10,7 @@ import {
   getProducts,
   updateProducts,
 } from "./products.service.js";
+import { getValidateByName } from "../../middleware/validateName/validateName.js";
 
 export const createProducts = (req, res) => {
   const body = req.body;
@@ -98,34 +99,7 @@ export const getAllProducts = (req, res) => {
         const productsWithDetails = await Promise.all(
           products.map(async (product) => {
             return new Promise((resolve, reject) => {
-              // Fetch category details
-              getByCategoryId(product.category_id, (err, category) => {
-                product.category = category;
-
-                // Fetch sub-category details
-                getBySubCategoryId(
-                  product.sub_category_id,
-                  (err, subCategory) => {
-                    product.sub_category = subCategory;
-
-                    // Fetch child-category details
-                    getCollectionsById(
-                      product.collection_id,
-                      (err, collection) => {
-                        product.collection_id = collection;
-
-                        // Fetch brand details
-                        getBrandsById(product.brand_id, (err, brand) => {
-                          product.brand = brand;
-
-                          // Resolve the product with all details
-                          resolve(product);
-                        });
-                      }
-                    );
-                  }
-                );
-              });
+              resolve(product);
             });
           })
         );
@@ -148,7 +122,6 @@ export const getAllProducts = (req, res) => {
 export const updateProductsById = (req, res) => {
   const params = req.params;
   const body = req.body;
-  console.log(params, "params");
   getUploadFile(req, tableNames.PRODUCTS, (err, result) => {
     if (err) {
       console.log(err);
@@ -156,7 +129,6 @@ export const updateProductsById = (req, res) => {
     }
     body.image = result;
     updateProducts(body, params.id, (err, results) => {
-      console.log(results, "results");
       if (err) {
         console.log(err);
         return res.status(500).json({
