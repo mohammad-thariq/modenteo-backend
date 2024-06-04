@@ -11,7 +11,7 @@ import {
 
 export const createSpotLight = (req, res) => {
   const body = req.body;
-  getUploadFile(body, tableNames.MANAGEWEBSITE.SPOTLIGHT, (err, result) => {
+  getUploadFile(req, tableNames.MANAGEWEBSITE.SPOTLIGHT, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);
@@ -89,7 +89,7 @@ export const updateSpotLightById = (req, res) => {
   const params = req.params;
   const body = req.body;
   console.log(params, "params");
-  getUploadFile(body, tableNames.MANAGEWEBSITE.SPOTLIGHT, (err, result) => {
+  getUploadFile(req, tableNames.MANAGEWEBSITE.SPOTLIGHT, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);

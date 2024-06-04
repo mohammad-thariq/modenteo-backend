@@ -23,7 +23,7 @@ export const createCategory = (req, res) => {
           error: `${body.name} name Already Taken`,
         });
       } else {
-        getUploadFile(body, tableNames.CATEGORIES, (err, result) => {
+        getUploadFile(req, tableNames.CATEGORIES, (err, result) => {
           if (err) {
             console.log(err);
             return res.status(400).json(err);
@@ -111,7 +111,7 @@ export const getAllCategories = (req, res) => {
 export const updateCategoryById = (req, res) => {
   const params = req.params;
   const body = req.body;
-  getUploadFile(body, tableNames.CATEGORIES, (err, result) => {
+  getUploadFile(req, tableNames.CATEGORIES, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);

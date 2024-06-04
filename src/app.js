@@ -6,6 +6,7 @@ import userRoutes from "./models/Users/users.router.js";
 import menuRoutes from "./models/Menu/menu.router.js";
 import categoriesRoutes from "./models/Categories/categories.router.js";
 import subCategoriesRoutes from "./models/SubCategories/subCategories.router.js";
+import collectionsRoutes  from "./models/Collections/collections.router.js";
 import brandsRoutes from "./models/Brands/brands.router.js";
 import productsRoutes from "./models/Products/products.router.js";
 import BannerRoutes from "./models/ManageWebsite/HomePageBaner/homePageBanner.router.js"
@@ -23,7 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(fileUpload());
 const publicPath = path.join(__dirname, "../public");
-// app.use(express.static(publicPath));
+app.use(express.static(publicPath));
 
 let corsOptions = {
   origin: "*",
@@ -38,13 +39,14 @@ app.use(
   menuRoutes,
   categoriesRoutes,
   subCategoriesRoutes,
+  collectionsRoutes,
   brandsRoutes,
   productsRoutes,
   BannerRoutes,
   SpotLightRoutes,
   ServiceRoutes
 );
-app.use('/upload', express.static(path.join(__dirname, 'upload')));
+// app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
 app.get("/", (req, res) => {
   res.send("<h1>Api Working Fine</h1>");

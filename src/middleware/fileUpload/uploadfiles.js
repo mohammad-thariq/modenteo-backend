@@ -1,15 +1,14 @@
 import path from "path";
 import { fileURLToPath } from "url";
-import crypto from "crypto"
 import fs from "fs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const getUploadFile = (body, table_name, callBack) => {
+export const getUploadFile = (req, table_name, callBack) => {
 
   const base64ToFileObject = (dataURI, callBack) => {
     const base64Data = dataURI.split(';base64,').pop();
-    let imgName = Date.now()+'.jpg';
+    let imgName = Date.now() + '.jpg';
 
     const filePath = path.join(
       __dirname,
@@ -34,15 +33,16 @@ export const getUploadFile = (body, table_name, callBack) => {
     });
   }
 
-  let files = body.files;
-  let imageFile;
-  const base64Image = body.image;
-  if(base64Image == undefined){
-    return callBack({
-      error: "Image missing",
-    });
-  }
+  let files = req.files;
+  let body = req.body;
+  console.log(files, 'filesfiles')
   if (!files || files.length === 0) {
+    const base64Image = body.image;
+    if (base64Image == undefined) {
+      return callBack({
+        error: "Image missing",
+      });
+    }
     if (base64Image != undefined && base64Image.includes(process.env.BASEURL)) {
       let url = body.image;
       let baseUrl = process.env.BASEURL;
@@ -54,12 +54,6 @@ export const getUploadFile = (body, table_name, callBack) => {
       );
     } else {
       return base64ToFileObject(base64Image, callBack);
-      if (imageFile instanceof Error) {
-        return callBack({
-          error: "Problem in Image file",
-        });
-      }
-      files = { image: imageFile };
     }
   }
   let sampleFile;
@@ -69,6 +63,8 @@ export const getUploadFile = (body, table_name, callBack) => {
   }
 
   sampleFile = files;
+  let imgName = Date.now() + '-' + sampleFile.image.name + '.jpg';
+
   uploadPath = path.join(
     __dirname,
     "..",
@@ -76,7 +72,7 @@ export const getUploadFile = (body, table_name, callBack) => {
     "..",
     "public",
     "upload",
-    `${table_name}-${sampleFile.image.name}`
+    `${table_name}-${imgName}`
   );
   sampleFile.image.mv(uploadPath, function (err) {
     if (err) {
@@ -86,7 +82,7 @@ export const getUploadFile = (body, table_name, callBack) => {
     }
     return callBack(
       null,
-      `/${"upload"}/${table_name}-${sampleFile.image.name}`
+      `/${"upload"}/${table_name}-${imgName}`
     );
   });
 };

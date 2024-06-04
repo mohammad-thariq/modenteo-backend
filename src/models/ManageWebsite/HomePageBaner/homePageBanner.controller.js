@@ -5,7 +5,7 @@ import { create, deleteBanner, getBanner, getByBannerId, updateBanner } from "./
 
 export const createBanner = (req, res) => {
   const body = req.body;
-  getUploadFile(body, tableNames.MANAGEWEBSITE.BANNER, (err, result) => {
+  getUploadFile(req, tableNames.MANAGEWEBSITE.BANNER, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);
@@ -83,7 +83,7 @@ export const updateBannerById = (req, res) => {
   const params = req.params;
   const body = req.body;
   console.log(params, "params");
-  getUploadFile(body, tableNames.MANAGEWEBSITE.BANNER, (err, result) => {
+  getUploadFile(req, tableNames.MANAGEWEBSITE.BANNER, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);

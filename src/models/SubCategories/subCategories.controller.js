@@ -28,7 +28,7 @@ export const createSubCategory = (req, res) => {
           error: `${body.name} name Already Taken`,
         });
       } else {
-        getUploadFile(body, tableNames.SUBCATEGORIES, (err, result) => {
+        getUploadFile(req, tableNames.SUBCATEGORIES, (err, result) => {
           if (err) {
             console.log(err);
             return res.status(400).json(err);
@@ -189,7 +189,7 @@ export const updateSubCategoryById = (req, res) => {
   const params = req.params;
   const body = req.body;
   console.log(params, "params");
-  getUploadFile(body, tableNames.SUBCATEGORIES, (err, result) => {
+  getUploadFile(req, tableNames.SUBCATEGORIES, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);

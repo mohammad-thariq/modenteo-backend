@@ -22,7 +22,8 @@ export const createCollections = (req, res) => {
           error: `${body.name} name Already Taken`,
         });
       } else {
-        getUploadFile(body, tableNames.COLLECTIONS, (err, result) => {
+        console.log(req.files, "bodybody")
+        getUploadFile(req, tableNames.COLLECTIONS, (err, result) => {
           if (err) {
             console.log(err);
             return res.status(400).json(err);
@@ -79,7 +80,7 @@ export const getCollectionByStatus = (req, res) => {
       });
     }
     return res.status(200).json({
-      child_categories: results,
+      collections: results,
     });
   });
 };
@@ -116,7 +117,7 @@ export const updateCollectionsById = (req, res) => {
   const params = req.params;
   const body = req.body;
   console.log(params, "params");
-  getUploadFile(body, tableNames.COLLECTIONS, (err, result) => {
+  getUploadFile(req, tableNames.COLLECTIONS, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);

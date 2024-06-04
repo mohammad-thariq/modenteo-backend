@@ -22,7 +22,7 @@ export const createProducts = (req, res) => {
           error: `${body.name} name Already Taken`,
         });
       } else {
-        getUploadFile(body, tableNames.PRODUCTS, (err, result) => {
+        getUploadFile(req, tableNames.PRODUCTS, (err, result) => {
           if (err) {
             console.log(err);
             return res.status(400).json(err);
@@ -149,7 +149,7 @@ export const updateProductsById = (req, res) => {
   const params = req.params;
   const body = req.body;
   console.log(params, "params");
-  getUploadFile(body, tableNames.PRODUCTS, (err, result) => {
+  getUploadFile(req, tableNames.PRODUCTS, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);

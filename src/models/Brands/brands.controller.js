@@ -22,7 +22,7 @@ export const createBrands = (req, res) => {
           error: `${body.name} name Already Taken`,
         });
       } else {
-        getUploadFile(body, tableNames.BRANDS, (err, result) => {
+        getUploadFile(req, tableNames.BRANDS, (err, result) => {
           if (err) {
             console.log(err);
             return res.status(400).json(err);
@@ -116,7 +116,7 @@ export const updateBrandsById = (req, res) => {
   const params = req.params;
   const body = req.body;
   console.log(params, "params");
-  getUploadFile(body, tableNames.BRANDS, (err, result) => {
+  getUploadFile(req, tableNames.BRANDS, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);
