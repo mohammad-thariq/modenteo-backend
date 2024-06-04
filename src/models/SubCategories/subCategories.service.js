@@ -20,6 +20,19 @@ export const create = (data, callBack) => {
   );
 };
 
+export const getBySubCategorySlug = (id, callBack) => {
+  db.query(
+    `SELECT id, name, slug, status, image FROM sub_categories WHERE slug = ?`,
+    [id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results.length ? results[0] : null);
+    }
+  );
+};
+
 export const getBySubCategoryId = (id, callBack) => {
   db.query(
     `SELECT id, category_id, name, slug, status, image FROM sub_categories WHERE id = ?`,

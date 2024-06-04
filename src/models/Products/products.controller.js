@@ -11,6 +11,7 @@ import {
   updateProducts,
 } from "./products.service.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
+import { getBySubCategorySlug } from "../SubCategories/subCategories.service.js";
 
 export const createProducts = (req, res) => {
   const body = req.body;
@@ -46,6 +47,80 @@ export const createProducts = (req, res) => {
   );
 };
 
+export const getProductsBySubCategory = (req, res) => {
+  const id = req.params.id;
+  getBySubCategorySlug(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        error: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        error: "Record not found",
+      });
+    }
+    getByProductsSubcatId(results?.id, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+      if (!results) {
+        return res.status(404).json({
+          success: 0,
+          message: "Record not found",
+        });
+      }
+      return res.status(200).json({
+        success: 1,
+        data: results,
+      });
+    });
+  });
+}
+
+export const getNewCollectionProduct = (req, res) => {
+  const id = req.params.id;
+  getByProductsId(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      products: results,
+    });
+  });
+};
+export const getSeasonCollectionProduct = (req, res) => {
+  const id = req.params.id;
+  getByProductsId(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      products: results,
+    });
+  });
+};
 export const getProductsById = (req, res) => {
   const id = req.params.id;
   getByProductsId(id, (err, results) => {

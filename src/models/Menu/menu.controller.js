@@ -59,7 +59,7 @@ export const getSeasonCollections = (req, res) => {
 }
 
 export const getNew = (req, res) => {
-  let newMenu = [{ id: "1", name: "New Arrivals", slug: "new-arrivals" }, { id: "2", name: "Top Products", slug: "top-products" }, { id: "3", name: "Best Selling", slug: "best-selling" }, { id: "4", name: "Featured Products", slug: "featured-products" }];
+  let newMenu = [{ id: "1", name: "New Arrivals", slug: "new-arrivals", image: "https://saisaravanane.com/frontend/uthr/assets/img/headerIcons/New.jpg" }, { id: "2", name: "Top Products", slug: "top-products", image: "https://saisaravanane.com/frontend/uthr/assets/img/others/rectangle-50-bg.png" }, { id: "3", name: "Best Selling", slug: "best-selling", image: "https://saisaravanane.com/frontend/uthr/assets/img/product/big-product/mask-group.png" }, { id: "4", name: "Featured Products", slug: "featured-products", image: "https://i.ezbuy.sg/Fr42grQtOhrTMEKt4gzucPtv3RLt" }];
   return res.status(200).json({
     response: newMenu,
   });

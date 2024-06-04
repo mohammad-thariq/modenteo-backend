@@ -4,6 +4,7 @@ import path from "path";
 import cors from "cors";
 import userRoutes from "./models/Users/users.router.js";
 import menuRoutes from "./models/Menu/menu.router.js";
+import cartRoutes from "./models/Cart/cart.router.js";
 import categoriesRoutes from "./models/Categories/categories.router.js";
 import subCategoriesRoutes from "./models/SubCategories/subCategories.router.js";
 import collectionsRoutes from "./models/Collections/collections.router.js";
@@ -40,6 +41,7 @@ app.use(
   "/v1",
   userRoutes,
   menuRoutes,
+  cartRoutes,
   categoriesRoutes,
   subCategoriesRoutes,
   collectionsRoutes,
@@ -64,10 +66,9 @@ app.listen(
     : ServerEnvironmentConfig.server.local,
   () => {
     console.log(
-      `Server started on port ${
-        ServerEnvironmentConfig.server.line === "production"
-          ? ServerEnvironmentConfig.server.live
-          : ServerEnvironmentConfig.server.local
+      `Server started on port ${ServerEnvironmentConfig.server.line === "production"
+        ? ServerEnvironmentConfig.server.live
+        : ServerEnvironmentConfig.server.local
       }`
     );
   }

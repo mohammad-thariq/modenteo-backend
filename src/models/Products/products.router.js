@@ -7,7 +7,7 @@ import {
   getAllProducts,
   getProductsById,
   getProductsByStatus,
-  updateProductsById,
+  updateProductsById,getProductsBySubCategory
 } from "./products.controller.js";
 
 const router = express.Router();
@@ -18,5 +18,6 @@ router.get("/products/:id", authenticateToken, getProductsById);
 router.get("/list/products", authenticateToken, getProductsByStatus);
 router.patch("/products/update/:id", authenticateToken, updateProductsById);
 router.delete("/products/delete/:id", authenticateToken, deleteProductsById);
+router.get("/category/products", getProductsBySubCategory);
 
 export default router;
