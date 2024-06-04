@@ -22,7 +22,6 @@ export const createCollections = (req, res) => {
           error: `${body.name} name Already Taken`,
         });
       } else {
-        console.log(req.files, "bodybody")
         getUploadFile(req, tableNames.COLLECTIONS, (err, result) => {
           if (err) {
             console.log(err);
@@ -116,7 +115,6 @@ export const getAllCollections = (req, res) => {
 export const updateCollectionsById = (req, res) => {
   const params = req.params;
   const body = req.body;
-  console.log(params, "params");
   getUploadFile(req, tableNames.COLLECTIONS, (err, result) => {
     if (err) {
       console.log(err);
@@ -124,7 +122,6 @@ export const updateCollectionsById = (req, res) => {
     }
     body.image = result;
     updateCollection(body, params.id, (err, results) => {
-      console.log(results, "results");
       if (err) {
         console.log(err);
         return res.status(500).json({

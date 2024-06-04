@@ -32,16 +32,13 @@ export const getUploadFile = (req, table_name, callBack) => {
       );
     });
   }
-
   let files = req.files;
   let body = req.body;
-  console.log(files, 'filesfiles')
   if (!files || files.length === 0) {
     const base64Image = body.image || body?.data?.image;
     if (base64Image == undefined) {
       return callBack({
         error: "Image missing",
-        data: body?.data
       });
     }
     if (base64Image != undefined && base64Image.includes(process.env.BASEURL)) {
