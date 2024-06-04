@@ -6,13 +6,16 @@ import userRoutes from "./models/Users/users.router.js";
 import menuRoutes from "./models/Menu/menu.router.js";
 import categoriesRoutes from "./models/Categories/categories.router.js";
 import subCategoriesRoutes from "./models/SubCategories/subCategories.router.js";
-import collectionsRoutes  from "./models/Collections/collections.router.js";
+import collectionsRoutes from "./models/Collections/collections.router.js";
 import brandsRoutes from "./models/Brands/brands.router.js";
 import productsRoutes from "./models/Products/products.router.js";
-import BannerRoutes from "./models/ManageWebsite/HomePageBaner/homePageBanner.router.js"
-import SpotLightRoutes from "./models/ManageWebsite/SpotLight/spotLight.router.js"
-import ServiceRoutes from "./models/ManageWebsite/CustomerService/service.router.js"
+import BannerRoutes from "./models/ManageWebsite/HomePageBaner/homePageBanner.router.js";
+import SpotLightRoutes from "./models/ManageWebsite/SpotLight/spotLight.router.js";
+import ServiceRoutes from "./models/ManageWebsite/CustomerService/service.router.js";
 import ServerEnvironmentConfig from "./config/server.config.js";
+import DiscountRoutes from "./models/ManageWebsite/DiscountBanner/discountBanner.router.js";
+import PopularProductsRoutes from "./models/ManageWebsite/PopularProducts/popularProducts.router.js";
+import FashionProductsRoutes from "./models/ManageWebsite/FashionProducts/fashions.router.js";
 import fileUpload from "express-fileupload";
 import { fileURLToPath } from "url";
 
@@ -44,14 +47,16 @@ app.use(
   productsRoutes,
   BannerRoutes,
   SpotLightRoutes,
-  ServiceRoutes
+  ServiceRoutes,
+  DiscountRoutes,
+  PopularProductsRoutes,
+  FashionProductsRoutes
 );
 // app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
 app.get("/", (req, res) => {
   res.send("<h1>Api Working Fine</h1>");
 });
-
 
 app.listen(
   ServerEnvironmentConfig.server.line === "production"

@@ -2,8 +2,8 @@ import db from "../../../database/index.js";
 
 export const create = (data, callBack) => {
   db.query(
-    `INSERT INTO spot_light (badge, page_url, status, image, bg_color) VALUES (?, ?, ?, ?, ?)`,
-    [data.badge, data.page_url, data.status, data.image, data.bg_color],
+    `INSERT INTO fashion_products (page_url, status, image) VALUES (?, ?, ?)`,
+    [data.page_url, data.status, data.image],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -13,9 +13,9 @@ export const create = (data, callBack) => {
   );
 };
 
-export const getBySpotLightId = (id, callBack) => {
+export const getByFashionId = (id, callBack) => {
   db.query(
-    `SELECT id, badge, page_url, status, image, bg_color from spot_light WHERE id = ?`,
+    `SELECT id, page_url, status, image from fashion_products WHERE id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -26,9 +26,9 @@ export const getBySpotLightId = (id, callBack) => {
   );
 };
 
-export const getSpotLight = (callBack) => {
+export const getFashion = (callBack) => {
   db.query(
-    `SELECT id, badge, page_url, status, image, bg_color FROM spot_light`,
+    `SELECT id, page_url, status, image FROM fashion_products`,
     [],
     (error, results) => {
       if (error) {
@@ -39,10 +39,10 @@ export const getSpotLight = (callBack) => {
   );
 };
 
-export const updateSpotLight = (data, id, callBack) => {
+export const updateFashion = (data, id, callBack) => {
   db.query(
-    `UPDATE spot_light SET badge = ?, page_url = ?, status = ?, image = ?, bg_color = ? WHERE id = ?`,
-    [data.badge, data.page_url, data.status, data.image, data.bg_color, id],
+    `UPDATE fashion_products SET page_url = ?, status = ?, image = ? WHERE id = ?`,
+    [data.page_url, data.status, data.image, id],
 
     (error, results) => {
       if (error) {
@@ -53,9 +53,9 @@ export const updateSpotLight = (data, id, callBack) => {
   );
 };
 
-export const deleteSpotLight = (data, callBack) => {
+export const deleteFashion = (data, callBack) => {
   db.query(
-    `DELETE FROM spot_light WHERE spot_light.id=?`,
+    `DELETE FROM fashion_products WHERE fashion_products.id=?`,
     [data.id],
     (error, results) => {
       if (error) {

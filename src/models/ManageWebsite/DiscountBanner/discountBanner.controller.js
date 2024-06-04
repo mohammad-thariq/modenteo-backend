@@ -3,15 +3,15 @@ import { getUploadFile } from "../../../middleware/fileUpload/uploadfiles.js";
 import { getDataByStatus } from "../../../middleware/getDataByStatus/index.js";
 import {
   create,
-  deleteBanner,
-  getBanner,
-  getByBannerId,
-  updateBanner,
-} from "./homePageBanner.service.js";
+  deleteDiscount,
+  getByDiscountId,
+  getDiscount,
+  updateDiscount,
+} from "./discountBanner.service.js";
 
-export const createBanner = (req, res) => {
+export const createDiscount = (req, res) => {
   const body = req.body;
-  getUploadFile(req, tableNames.MANAGEWEBSITE.BANNER, (err, result) => {
+  getUploadFile(req, tableNames.MANAGEWEBSITE.DISCOUNTBANNER, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);
@@ -33,9 +33,9 @@ export const createBanner = (req, res) => {
   });
 };
 
-export const getBannerById = (req, res) => {
+export const getDiscountById = (req, res) => {
   const id = req.params.id;
-  getByBannerId(id, (err, results) => {
+  getByDiscountId(id, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -56,8 +56,8 @@ export const getBannerById = (req, res) => {
   });
 };
 
-export const getBannerByStatus = (req, res) => {
-  getDataByStatus(tableNames.MANAGEWEBSITE.BANNER, (err, results) => {
+export const getDiscountByStatus = (req, res) => {
+  getDataByStatus(tableNames.MANAGEWEBSITE.DISCOUNTBANNER, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -70,8 +70,8 @@ export const getBannerByStatus = (req, res) => {
   });
 };
 
-export const getAllBanner = (req, res) => {
-  getBanner((err, results) => {
+export const getAllDiscounts = (req, res) => {
+  getDiscount((err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -85,17 +85,17 @@ export const getAllBanner = (req, res) => {
   });
 };
 
-export const updateBannerById = (req, res) => {
+export const updateDiscountById = (req, res) => {
   const params = req.params;
   const body = req.body;
   console.log(params, "params");
-  getUploadFile(req, tableNames.MANAGEWEBSITE.BANNER, (err, result) => {
+  getUploadFile(req, tableNames.MANAGEWEBSITE.DISCOUNTBANNER, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(400).json(err);
     }
     body.image = result;
-    updateBanner(body, params.id, (err, results) => {
+    updateDiscount(body, params.id, (err, results) => {
       console.log(results, "results");
       if (err) {
         console.log(err);
@@ -112,9 +112,9 @@ export const updateBannerById = (req, res) => {
   });
 };
 
-export const deleteBannerById = (req, res) => {
+export const deleteDiscountById = (req, res) => {
   const data = req.params;
-  deleteBanner(data, (err, results) => {
+  deleteDiscount(data, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({

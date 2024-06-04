@@ -9,6 +9,10 @@ export const tableNames = {
   MANAGEWEBSITE: {
     BANNER: "banner",
     SPOTLIGHT: "spot_light",
-    CUSTOMERSERVICE: "customer_service"
-  }
+    CUSTOMERSERVICE: "customer_service",
+    DISCOUNTBANNER: "discount_banner",
+    FASHIONPRODUCTS: "fashion_products",
+    POPULARPRODUCTS: "popular_products",
+    CATEGORIES: "categories",
+  },
 };

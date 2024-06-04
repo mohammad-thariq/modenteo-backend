@@ -3,39 +3,43 @@ import { getUploadFile } from "../../../middleware/fileUpload/uploadfiles.js";
 import { getDataByStatus } from "../../../middleware/getDataByStatus/index.js";
 import {
   create,
-  deleteBanner,
-  getBanner,
-  getByBannerId,
-  updateBanner,
-} from "./homePageBanner.service.js";
+  deleteFashion,
+  getByFashionId,
+  getFashion,
+  updateFashion,
+} from "./fashions.service.js";
 
-export const createBanner = (req, res) => {
+export const createFashion = (req, res) => {
   const body = req.body;
-  getUploadFile(req, tableNames.MANAGEWEBSITE.BANNER, (err, result) => {
-    if (err) {
-      console.log(err);
-      return res.status(400).json(err);
-    }
-    body.image = result;
-    create(body, (err, results) => {
+  getUploadFile(
+    req,
+    tableNames.MANAGEWEBSITE.FASHIONPRODUCTS,
+    (err, result) => {
       if (err) {
         console.log(err);
-        return res.status(500).json({
-          success: 0,
-          message: "Database connection error",
-        });
+        return res.status(400).json(err);
       }
-      return res.status(200).json({
-        success: 1,
-        data: results,
+      body.image = result;
+      create(body, (err, results) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            success: 0,
+            message: "Database connection error",
+          });
+        }
+        return res.status(200).json({
+          success: 1,
+          data: results,
+        });
       });
-    });
-  });
+    }
+  );
 };
 
-export const getBannerById = (req, res) => {
+export const getFashionById = (req, res) => {
   const id = req.params.id;
-  getByBannerId(id, (err, results) => {
+  getByFashionId(id, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -56,8 +60,8 @@ export const getBannerById = (req, res) => {
   });
 };
 
-export const getBannerByStatus = (req, res) => {
-  getDataByStatus(tableNames.MANAGEWEBSITE.BANNER, (err, results) => {
+export const getFashionByStatus = (req, res) => {
+  getDataByStatus(tableNames.MANAGEWEBSITE.FASHIONPRODUCTS, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -70,8 +74,8 @@ export const getBannerByStatus = (req, res) => {
   });
 };
 
-export const getAllBanner = (req, res) => {
-  getBanner((err, results) => {
+export const getAllFashions = (req, res) => {
+  getFashion((err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -85,36 +89,40 @@ export const getAllBanner = (req, res) => {
   });
 };
 
-export const updateBannerById = (req, res) => {
+export const updateFashionById = (req, res) => {
   const params = req.params;
   const body = req.body;
   console.log(params, "params");
-  getUploadFile(req, tableNames.MANAGEWEBSITE.BANNER, (err, result) => {
-    if (err) {
-      console.log(err);
-      return res.status(400).json(err);
-    }
-    body.image = result;
-    updateBanner(body, params.id, (err, results) => {
-      console.log(results, "results");
+  getUploadFile(
+    req,
+    tableNames.MANAGEWEBSITE.FASHIONPRODUCTS,
+    (err, result) => {
       if (err) {
         console.log(err);
-        return res.status(500).json({
-          success: 0,
-          message: "Database connection error",
-        });
+        return res.status(400).json(err);
       }
-      return res.status(200).json({
-        success: 1,
-        message: "Updated successfully",
+      body.image = result;
+      updateFashion(body, params.id, (err, results) => {
+        console.log(results, "results");
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            success: 0,
+            message: "Database connection error",
+          });
+        }
+        return res.status(200).json({
+          success: 1,
+          message: "Updated successfully",
+        });
       });
-    });
-  });
+    }
+  );
 };
 
-export const deleteBannerById = (req, res) => {
+export const deleteFashionById = (req, res) => {
   const data = req.params;
-  deleteBanner(data, (err, results) => {
+  deleteFashion(data, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
