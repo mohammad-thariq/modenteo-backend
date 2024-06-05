@@ -26,15 +26,18 @@ export const createCart = (req, res) => {
 };
 
 export const getAllCart = (req, res) => {
-  getDataByStatus(tableNames.CART, (err, results) => {
+  const params = req.params;
+  get(params?.userID, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
-        error: "Database connection error",
+        success: 0,
+        message: "Database connection error",
       });
     }
     return res.status(200).json({
-      categories: results,
+      success: 1,
+      data: results,
     });
   });
 };
@@ -42,26 +45,18 @@ export const getAllCart = (req, res) => {
 export const updateCartById = (req, res) => {
   const params = req.params;
   const body = req.body;
-  getUploadFile(req, tableNames.CART, (err, result) => {
+  updateCart(body, params.id, (err, results) => {
+    console.log(results, "results");
     if (err) {
       console.log(err);
-      return res.status(400).json(err);
-    }
-    console.log(result, "result");
-    body.image = result;
-    updateCart(body, params.id, (err, results) => {
-      console.log(results, "results");
-      if (err) {
-        console.log(err);
-        return res.status(500).json({
-          success: 0,
-          message: "Database connection error",
-        });
-      }
-      return res.status(200).json({
-        success: 1,
-        message: "Updated successfully",
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
       });
+    }
+    return res.status(200).json({
+      success: 1,
+      message: "Updated successfully",
     });
   });
 };

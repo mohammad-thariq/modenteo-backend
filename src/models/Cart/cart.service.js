@@ -13,7 +13,18 @@ export const create = (data, callBack) => {
     }
   );
 };
-
+export const get = (id, callBack) => {
+  db.query(
+    `SELECT id, product_id, user_id, quantity FROM cart WHERE user_id = ?`,
+    [id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results.length ? results[0] : null);
+    }
+  );
+};
 export const updateCart = (data, id, callBack) => {
   db.query(
     `UPDATE cart SET quantity = ? WHERE id = ?`,
