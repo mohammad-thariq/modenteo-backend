@@ -5,6 +5,7 @@ import cors from "cors";
 import userRoutes from "./models/Users/users.router.js";
 import menuRoutes from "./models/Menu/menu.router.js";
 import cartRoutes from "./models/Cart/cart.router.js";
+import wishlistRoutes from "./models/Wishlist/wishlist.router.js";
 import categoriesRoutes from "./models/Categories/categories.router.js";
 import subCategoriesRoutes from "./models/SubCategories/subCategories.router.js";
 import collectionsRoutes from "./models/Collections/collections.router.js";
@@ -42,6 +43,7 @@ app.use(
   userRoutes,
   menuRoutes,
   cartRoutes,
+  wishlistRoutes,
   categoriesRoutes,
   subCategoriesRoutes,
   collectionsRoutes,

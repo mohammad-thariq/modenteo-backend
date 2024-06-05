@@ -15,13 +15,13 @@ export const create = (data, callBack) => {
 };
 export const get = (id, callBack) => {
   db.query(
-    `SELECT id, product_id, user_id, quantity FROM cart WHERE user_id = ?`,
+    `SELECT cart.user_id, cart.id, cart.quantity,cart.product_id,products.price,products.offer_price, products.name,products.image FROM cart INNER JOIN products on products.id = cart.product_id WHERE user_id = ?`,
     [id],
     (error, results) => {
       if (error) {
         return callBack(error);
       }
-      return callBack(null, results.length ? results[0] : null);
+      return callBack(null, results);
     }
   );
 };
@@ -38,10 +38,10 @@ export const updateCart = (data, id, callBack) => {
   );
 };
 
-export const deleteCart = (data, callBack) => {
+export const deleteCart = (id, callBack) => {
   db.query(
     `DELETE FROM cart WHERE cart.id=?`,
-    [data.id],
+    [id],
     (error, results) => {
       if (error) {
         return callBack(error);

@@ -1,9 +1,5 @@
-//   import UserEnvironmentConfig from "../../config/env.config.js";
-import { tableNames } from "../../database/tables/index.js";
-import { getUploadFile } from "../../middleware/fileUpload/uploadfiles.js";
-import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
 import {
-  create,
+  create, get,
   deleteWishlist,
 } from "./wishlist.service.js";
 
@@ -25,22 +21,25 @@ export const createWishlist = (req, res) => {
 };
 
 export const getAllWishlist = (req, res) => {
-  getDataByStatus(tableNames.CART, (err, results) => {
+  const params = req.params;
+  get(params?.userID, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
-        error: "Database connection error",
+        success: 0,
+        message: "Database connection error",
       });
     }
     return res.status(200).json({
-      categories: results,
+      success: 1,
+      data: results,
     });
   });
 };
 
 export const deleteWishlistById = (req, res) => {
-  const data = req.params;
-  deleteWishlist(data, (err, results) => {
+  const params = req.params;
+  deleteWishlist(params?.id, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({

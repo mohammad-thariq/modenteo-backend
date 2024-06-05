@@ -6,6 +6,7 @@ import {
   create,
   deleteCart,
   updateCart,
+  get
 } from "./cart.service.js";
 
 export const createCart = (req, res) => {
@@ -63,7 +64,7 @@ export const updateCartById = (req, res) => {
 
 export const deleteCartById = (req, res) => {
   const data = req.params;
-  deleteCart(data, (err, results) => {
+  deleteCart(data?.id, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
