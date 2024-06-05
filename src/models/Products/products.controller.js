@@ -8,11 +8,11 @@ import {
   deleteProducts,
   getByProductsId,
   getProducts,
-  updateProducts,
+  updateProducts, getByProductsSubcatId
 } from "./products.service.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import { getBySubCategorySlug } from "../SubCategories/subCategories.service.js";
-
+import { getByCategorySlug } from "../Categories/categories.service.js";
 export const createProducts = (req, res) => {
   const body = req.body;
   getValidateByName(
@@ -48,8 +48,9 @@ export const createProducts = (req, res) => {
 };
 
 export const getProductsBySubCategory = (req, res) => {
-  const id = req.params.id;
-  getBySubCategorySlug(id, (err, results) => {
+  const cat = req.params.cat;
+  const subcat = req.params.subcat;
+  getByCategorySlug(cat, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -61,23 +62,36 @@ export const getProductsBySubCategory = (req, res) => {
         error: "Record not found",
       });
     }
-    getByProductsSubcatId(results?.id, (err, results) => {
+    getBySubCategorySlug(results?.id, subcat, (err, results) => {
       if (err) {
         console.log(err);
         return res.status(500).json({
-          success: 0,
-          message: "Database connection error",
+          error: "Database connection error",
         });
       }
       if (!results) {
         return res.status(404).json({
-          success: 0,
-          message: "Record not found",
+          error: "Record not found",
         });
       }
-      return res.status(200).json({
-        success: 1,
-        data: results,
+      getByProductsSubcatId(results?.id, (err, results) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            success: 0,
+            message: "Database connection error",
+          });
+        }
+        if (!results) {
+          return res.status(404).json({
+            success: 0,
+            message: "Record not found",
+          });
+        }
+        return res.status(200).json({
+          success: 1,
+          data: results,
+        });
       });
     });
   });

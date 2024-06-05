@@ -18,6 +18,6 @@ router.get("/products/:id", authenticateToken, getProductsById);
 router.get("/list/products", authenticateToken, getProductsByStatus);
 router.patch("/products/update/:id", authenticateToken, updateProductsById);
 router.delete("/products/delete/:id", authenticateToken, deleteProductsById);
-router.get("/category/products", getProductsBySubCategory);
+router.get("/products/:cat/:subcat", getProductsBySubCategory);
 
 export default router;

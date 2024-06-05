@@ -20,10 +20,10 @@ export const create = (data, callBack) => {
   );
 };
 
-export const getBySubCategorySlug = (id, callBack) => {
+export const getBySubCategorySlug = (cat, subcat, callBack) => {
   db.query(
-    `SELECT id, name, slug, status, image FROM sub_categories WHERE slug = ?`,
-    [id],
+    `SELECT id, name, slug, status, image FROM sub_categories WHERE slug = ? and category_id = ?`,
+    [subcat, cat],
     (error, results) => {
       if (error) {
         return callBack(error);
