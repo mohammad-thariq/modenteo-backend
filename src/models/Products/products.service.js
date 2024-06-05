@@ -50,6 +50,19 @@ export const getByProductsId = (id, callBack) => {
   );
 };
 
+export const getByProductsSlug = (id, callBack) => {
+  db.query(
+    `SELECT id, image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, best_product FROM products WHERE slug = ?`,
+    [id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results.length ? results[0] : null);
+    }
+  );
+};
+
 export const getByProductsSubcatId = (id, callBack) => {
   db.query(
     `SELECT id, image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, best_product FROM products WHERE sub_category_id = ?`,

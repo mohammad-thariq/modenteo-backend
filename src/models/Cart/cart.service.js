@@ -15,7 +15,7 @@ export const create = (data, callBack) => {
 };
 export const get = (id, callBack) => {
   db.query(
-    `SELECT cart.user_id, cart.id, cart.quantity,cart.product_id,products.price,products.offer_price, products.name,products.image FROM cart INNER JOIN products on products.id = cart.product_id WHERE user_id = ?`,
+    `SELECT cart.user_id, cart.id, cart.quantity,cart.product_id,products.price,products.offer_price, products.name,products.image, products.slug FROM cart INNER JOIN products on products.id = cart.product_id WHERE user_id = ?`,
     [id],
     (error, results) => {
       if (error) {

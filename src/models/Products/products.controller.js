@@ -6,7 +6,7 @@ import { getCollectionsById } from "../Collections/collections.controller.js";
 import {
   create,
   deleteProducts,
-  getByProductsId,
+  getByProductsId, getByProductsSlug,
   getProducts,
   updateProducts, getByProductsSubcatId
 } from "./products.service.js";
@@ -119,6 +119,26 @@ export const getNewCollectionProduct = (req, res) => {
 export const getSeasonCollectionProduct = (req, res) => {
   const id = req.params.id;
   getByProductsId(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      products: results,
+    });
+  });
+};
+
+export const getProductsBySlug = (req, res) => {
+  const id = req.params.slug;
+  getByProductsSlug(id, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
