@@ -27,6 +27,19 @@ export const getByCollectionsId = (id, callBack) => {
   );
 };
 
+export const getByCollectionsSlug = (id, callBack) => {
+  db.query(
+    `SELECT id, name, slug, status, image FROM collections WHERE slug = ?`,
+    [id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results.length ? results[0] : null);
+    }
+  );
+};
+
 export const getCollections = (data, callBack) => {
   db.query(
     `SELECT id, name, slug, status, image FROM collections LIMIT ${data.limit} OFFSET ${data.offset}`,
