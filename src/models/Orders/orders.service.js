@@ -3,19 +3,22 @@ import { getSlugwithName } from "../../utils/getSlugforAll.js";
 
 export const create = (data, callBack) => {
   db.query(
-    `INSERT INTO orders (order_id, product_qty, user_id, order_status, payment_status, order_completed_date, order_declined_date, order_delivered_date, total_amount, shipping_method, shipping_cost, transection_id, payment_approval_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO orders (order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?)`,
     [
       data.order_id,
-      data.product_qty,
       data.user_id,
-      data.order_status,
+      data.billing_id,
       data.payment_status,
+      data.order_status,
+      data.ordered_date,
       data.order_completed_date,
-      data.order_declined_date,
+      data.order_cancelled_date,
       data.order_delivered_date,
       data.total_amount,
       data.shipping_method,
       data.shipping_cost,
+      data.discount_amount,
+      data.mode_of_payment,
       data.transection_id,
       data.payment_approval_date,
     ],
@@ -30,7 +33,7 @@ export const create = (data, callBack) => {
 
 export const getByOrdersOrderId = (id, callBack) => {
   db.query(
-    `SELECT id, order_id, product_qty, user_id, order_status, payment_status, order_completed_date, order_declined_date, order_delivered_date, total_amount, shipping_method, shipping_cost, transection_id, payment_approval_date FROM orders WHERE order_id = ?`,
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -43,7 +46,7 @@ export const getByOrdersOrderId = (id, callBack) => {
 
 export const getByOrdersId = (id, callBack) => {
   db.query(
-    `SELECT id, order_id, product_qty, user_id, order_status, payment_status, order_completed_date, order_declined_date, order_delivered_date, total_amount, shipping_method, shipping_cost, transection_id, payment_approval_date FROM orders WHERE id = ?`,
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -56,7 +59,7 @@ export const getByOrdersId = (id, callBack) => {
 
 export const getByOrdersUserId = (id, callBack) => {
   db.query(
-    `SELECT id, order_id, product_qty, user_id, order_status, payment_status, order_completed_date, order_declined_date, order_delivered_date, total_amount, shipping_method, shipping_cost, transection_id, payment_approval_date FROM orders WHERE user_id = ?`,
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE user_id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -69,7 +72,7 @@ export const getByOrdersUserId = (id, callBack) => {
 
 export const getPendingOrders = (callBack) => {
   db.query(
-    `SELECT id, order_id, product_qty, user_id, order_status, payment_status, order_completed_date, order_declined_date, order_delivered_date, total_amount, shipping_method, shipping_cost, transection_id, payment_approval_date FROM orders WHERE order_status = ?`,
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ?`,
     [0],
     (error, results) => {
       if (error) {
@@ -82,7 +85,7 @@ export const getPendingOrders = (callBack) => {
 
 export const getInProcessOrders = (callBack) => {
   db.query(
-    `SELECT id, order_id, product_qty, user_id, order_status, payment_status, order_completed_date, order_declined_date, order_delivered_date, total_amount, shipping_method, shipping_cost, transection_id, payment_approval_date FROM orders WHERE order_status = ?`,
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ?`,
     [1],
     (error, results) => {
       if (error) {
@@ -93,10 +96,10 @@ export const getInProcessOrders = (callBack) => {
   );
 };
 
-export const getDispatchedOrders = (callBack) => {
+export const getDispatchedOrders = (orderStatus, callBack) => {
   db.query(
-    `SELECT id, order_id, product_qty, user_id, order_status, payment_status, order_completed_date, order_declined_date, order_delivered_date, total_amount, shipping_method, shipping_cost, transection_id, payment_approval_date FROM orders WHERE order_status = ?`,
-    [2],
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ?`,
+    [orderStatus],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -106,10 +109,10 @@ export const getDispatchedOrders = (callBack) => {
   );
 };
 
-export const getCompletedOrders = (callBack) => {
+export const getCompletedOrders = (orderStatus, callBack) => {
   db.query(
-    `SELECT id, order_id, product_qty, user_id, order_status, payment_status, order_completed_date, order_declined_date, order_delivered_date, total_amount, shipping_method, shipping_cost, transection_id, payment_approval_date FROM orders WHERE order_status = ?`,
-    [3],
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ?`,
+    [orderStatus],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -119,11 +122,10 @@ export const getCompletedOrders = (callBack) => {
   );
 };
 
-
-export const getDeclinedOrders = (callBack) => {
+export const getDeclinedOrders = (orderStatus, callBack) => {
   db.query(
-    `SELECT id, order_id, product_qty, user_id, order_status, payment_status, order_completed_date, order_declined_date, order_delivered_date, total_amount, shipping_method, shipping_cost, transection_id, payment_approval_date FROM orders WHERE order_status= ?`,
-    [4],
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status= ?`,
+    [orderStatus],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -135,7 +137,7 @@ export const getDeclinedOrders = (callBack) => {
 
 export const getOrders = (data, callBack) => {
   db.query(
-    `SELECT id, order_id, product_qty, user_id, order_status, payment_status, order_completed_date, order_declined_date, order_delivered_date, total_amount, shipping_method, shipping_cost, transection_id, payment_approval_date FROM orders LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders LIMIT ${data.limit} OFFSET ${data.offset}`,
     [],
     (error, results) => {
       if (error) {
@@ -148,8 +150,25 @@ export const getOrders = (data, callBack) => {
 
 export const updateOrders = (data, id, callBack) => {
   db.query(
-    `UPDATE orders SET order_id = ?, product_qty = ?, user_id = ?, order_status = ?, payment_status = ?, order_completed_date = ?, order_declined_date = ?, order_delivered_date = ?, total_amount = ?, shipping_method = ?, shipping_cost = ?, transection_id = ?, payment_approval_date = ? WHERE id = ?`,
-    [data.name, getSlugwithName(data.name), data.status, data.image, id],
+    `UPDATE orders SET order_id = ?, user_id = ?, billing_id = ?, payment_status = ?, order_status = ?, ordered_date = ?, order_completed_date = ?, order_cancelled_date = ?, order_delivered_date = ?, total_amount = ?, shipping_method = ?, shipping_cost = ?, discount_amount = ?, mode_of_payment = ?, transection_id = ?, payment_approval_date = ? WHERE id = ?`,
+    [
+      data.order_id,
+      data.user_id,
+      data.billing_id,
+      data.payment_status,
+      data.order_status,
+      data.ordered_date,
+      data.order_completed_date,
+      data.order_cancelled_date,
+      data.order_delivered_date,
+      data.total_amount,
+      data.shipping_method,
+      data.shipping_cost,
+      data.discount_amount,
+      data.mode_of_payment,
+      data.transection_id,
+      data.payment_approval_date,
+    ],
     (error, results) => {
       if (error) {
         return callBack(error);

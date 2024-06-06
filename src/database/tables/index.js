@@ -9,6 +9,7 @@ export const tableNames = {
   CART: "cart",
   WISHLIST: "wishlist",
   ORDERS: "orders",
+  ORDERITEMS: "order_items",
   MANAGEWEBSITE: {
     BANNER: "banner",
     SPOTLIGHT: "spot_light",
