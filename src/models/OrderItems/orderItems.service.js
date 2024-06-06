@@ -1,13 +1,14 @@
 import db from "../../database/index.js";
 
 export const create = (data, callBack) => {
+  console.log(data,'datadata')
   db.query(
     `INSERT INTO orders_items (order_id, product_id, quantity, product_price, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)`,
     [
       data.order_id,
-      data.product_id,
-      data.quantity,
-      data.product_price,
+      data.id,
+      data.qty,
+      data.price,
       data.created_at,
       data.updated_at,
     ],

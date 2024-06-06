@@ -190,3 +190,30 @@ export const deleteOrders = (data, callBack) => {
     }
   );
 };
+
+export const generateNextOrderNumber = async (callBack) => {
+  const defaultOrderNumber = '#ORD0001';
+  db.query(
+    `SELECT order_id FROM orders ORDER BY order_id DESC LIMIT 1`,
+    (error, results) => {
+      console.log(results, 'resultsresults')
+      if (error) {
+        return callBack(defaultOrderNumber);
+      }
+      if (results.length > 0) {
+        console.log("lastOrderNumber")
+
+        const lastOrderNumber = results[0].order_id;
+        const numericPart = parseInt(lastOrderNumber.replace('#ORD', ''), 10);
+        const nextNumericPart = numericPart + 1;
+        const nextOrderNumber = `#ORD${nextNumericPart.toString().padStart(4, '0')}`;
+        return callBack(nextOrderNumber);
+
+      } else {
+        return callBack(defaultOrderNumber);
+      }
+
+    }
+  );
+
+};

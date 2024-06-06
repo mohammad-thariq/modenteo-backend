@@ -5,12 +5,23 @@ import {
   updateOrders,
   deleteOrders,
   getOrders,
-  getByOrdersId,
+  getByOrdersId, generateNextOrderNumber
 } from "./orders.service.js";
+import { create as createOrderItem } from "../OrderItems/orderItems.service.js";
 
-export const createOrders= (req, res) => {
+export const createOrders = async (req, res) => {
   const body = req.body;
-    create(body, (err, results) => {
+  let products = body.products;
+  let orderNumber = '';
+  // Generate Order No
+  generateNextOrderNumber((results) => {
+    orderNumber = results;
+    // Create Order
+    body.order_id = orderNumber;
+    const currentDatetime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    body.ordered_date = currentDatetime;
+
+    create(body, async (err, results) => {
       if (err) {
         console.log(err);
         return res.status(500).json({
@@ -18,12 +29,39 @@ export const createOrders= (req, res) => {
           message: "Database connection error",
         });
       }
-      return res.status(200).json({
-        success: 1,
-        data: results,
-      });
+      try {
+        await Promise.all(products.map(async (item) => {
+          item.order_id = orderNumber;
+          item.created_at = currentDatetime;
+          item.updated_at = currentDatetime;
+          createOrderItem(item, (err, results) => {
+            // console.log(err,'err');
+            // console.log(results,'results');
+           
+          });
+        }));
+      } catch (error) {
+        return res.status(200).json({
+          success: 1,
+          data: error,
+        });
+
+      }
+      finally {
+        return res.status(200).json({
+          success: 1,
+          data: "Order Created Successfully",
+        });
+
+      }
+
     });
-  }
+
+
+  });
+
+
+}
 
 export const getOrdersById = (req, res) => {
   const id = req.params.id;
@@ -102,21 +140,21 @@ export const getAllOrders = (req, res) => {
 export const updateOrdersById = (req, res) => {
   const params = req.params;
   const body = req.body;
-    updateOrders(body, params.id, (err, results) => {
-      console.log(results, "results");
-      if (err) {
-        console.log(err);
-        return res.status(500).json({
-          success: 0,
-          message: "Database connection error",
-        });
-      }
-      return res.status(200).json({
-        success: 1,
-        message: "Updated successfully",
+  updateOrders(body, params.id, (err, results) => {
+    console.log(results, "results");
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
       });
+    }
+    return res.status(200).json({
+      success: 1,
+      message: "Updated successfully",
     });
-  }
+  });
+}
 
 export const deleteOrdersById = (req, res) => {
   const data = req.params;
