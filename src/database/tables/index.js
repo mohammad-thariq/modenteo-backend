@@ -8,6 +8,7 @@ export const tableNames = {
   COLLECTIONS: "collections",
   CART: "cart",
   WISHLIST: "wishlist",
+  ORDERS: "orders",
   MANAGEWEBSITE: {
     BANNER: "banner",
     SPOTLIGHT: "spot_light",
