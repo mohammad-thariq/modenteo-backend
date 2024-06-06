@@ -2,11 +2,11 @@ import { tableNames } from "../../database/tables/index.js";
 import { getUploadFile } from "../../middleware/fileUpload/uploadfiles.js";
 import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
 import { getPaginated } from "../../middleware/pagination/paginated.js";
-import { getCollectionsById } from "../Collections/collections.controller.js";
+import { getByCollectionsSlug } from "../Collections/collections.service.js";
 import {
   create,
   deleteProducts,
-  getByProductsId, getByProductsSlug,
+  getByProductsId, getByProductsSlug, getByProductsbyCollection, getByProductsbyCollectionID,
   getProducts,
   updateProducts, getByProductsSubcatId
 } from "./products.service.js";
@@ -135,7 +135,75 @@ export const getSeasonCollectionProduct = (req, res) => {
     });
   });
 };
+export const getCollectionProducts = (req, res) => {
+  const id = req.params.type;
+  let type = '';
+  switch (id) {
+    case 'new-arrivals':
+      type = 'new_arrival';
+      break;
+    case 'best-selling':
+      type = 'best_product';
+      break;
+    case 'top-products':
+      type = 'top_product';
+      break;
+    case 'featured-products':
+      type = 'featured_product';
+      break;
+    default:
+      type = 'get-collection';
+  }
+  if (type === 'get-collection') {
+    getByCollectionsSlug(id, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          error: "Database connection error",
+        });
+      }
+      if (!results) {
+        return res.status(404).json({
+          error: "Record not found",
+        });
+      }
+      getByProductsbyCollectionID(results?.id, (err, results) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            message: "Database connection error",
+          });
+        }
+        if (!results) {
+          return res.status(404).json({
+            message: "Record not found",
+          });
+        }
+        return res.status(200).json({
+          data: results,
+        });
+      });
+    });
+  } else {
+    getByProductsbyCollection(type, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          message: "Database connection error",
+        });
+      }
+      if (!results) {
+        return res.status(404).json({
+          message: "Record not found",
+        });
+      }
+      return res.status(200).json({
+        data: results,
+      });
+    });
+  }
 
+};
 export const getProductsBySlug = (req, res) => {
   const id = req.params.slug;
   getByProductsSlug(id, (err, results) => {
