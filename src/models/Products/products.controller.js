@@ -8,7 +8,7 @@ import {
   deleteProducts,
   getByProductsId, getByProductsSlug, getByProductsbyCollection, getByProductsbyCollectionID,
   getProducts,
-  updateProducts, getByProductsSubcatId
+  updateProducts, getByProductsSubcatId, getByProductsbyCategoryID
 } from "./products.service.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import { getBySubCategorySlug } from "../SubCategories/subCategories.service.js";
@@ -135,6 +135,7 @@ export const getSeasonCollectionProduct = (req, res) => {
     });
   });
 };
+
 export const getCollectionProducts = (req, res) => {
   const id = req.params.type;
   let type = '';
@@ -204,6 +205,40 @@ export const getCollectionProducts = (req, res) => {
   }
 
 };
+
+export const getProductsByCat = (req, res) => {
+  const id = req.params.cat;
+  getByCategorySlug(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        error: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        error: "Record not found",
+      });
+    }
+    getByProductsbyCategoryID(results?.id, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          message: "Database connection error",
+        });
+      }
+      if (!results) {
+        return res.status(404).json({
+          message: "Record not found",
+        });
+      }
+      return res.status(200).json({
+        data: results,
+      });
+    });
+  });
+};
+
 export const getProductsBySlug = (req, res) => {
   const id = req.params.slug;
   getByProductsSlug(id, (err, results) => {
@@ -223,6 +258,7 @@ export const getProductsBySlug = (req, res) => {
     });
   });
 };
+
 export const getProductsById = (req, res) => {
   const id = req.params.id;
   getByProductsId(id, (err, results) => {
