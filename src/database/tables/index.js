@@ -10,6 +10,7 @@ export const tableNames = {
   WISHLIST: "wishlist",
   ORDERS: "orders",
   ORDERITEMS: "order_items",
+  USERADDRESS: "user_address",
   MANAGEWEBSITE: {
     BANNER: "banner",
     SPOTLIGHT: "spot_light",

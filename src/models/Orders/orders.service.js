@@ -1,5 +1,4 @@
 import db from "../../database/index.js";
-import { getSlugwithName } from "../../utils/getSlugforAll.js";
 
 export const create = (data, callBack) => {
   db.query(
@@ -161,24 +160,15 @@ export const getOrders = (data, callBack) => {
 
 export const updateOrders = (data, id, callBack) => {
   db.query(
-    `UPDATE orders SET order_id = ?, user_id = ?, billing_id = ?, payment_status = ?, order_status = ?, ordered_date = ?, order_completed_date = ?, order_cancelled_date = ?, order_delivered_date = ?, total_amount = ?, shipping_method = ?, shipping_cost = ?, discount_amount = ?, mode_of_payment = ?, transection_id = ?, payment_approval_date = ? WHERE id = ?`,
+    `UPDATE orders SET  payment_status = ?, order_status = ?, order_completed_date = ?, order_cancelled_date = ?, order_delivered_date = ?, payment_approval_date = ? WHERE id = ?`,
     [
-      data.order_id,
-      data.user_id,
-      data.billing_id,
       data.payment_status,
       data.order_status,
-      data.ordered_date,
       data.order_completed_date,
       data.order_cancelled_date,
       data.order_delivered_date,
-      data.total_amount,
-      data.shipping_method,
-      data.shipping_cost,
-      data.discount_amount,
-      data.mode_of_payment,
-      data.transection_id,
       data.payment_approval_date,
+      id
     ],
     (error, results) => {
       if (error) {
