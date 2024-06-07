@@ -5,8 +5,8 @@ export const create = (data, callBack) => {
     `INSERT INTO orders_items (order_id, product_id, quantity, product_price, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)`,
     [
       data.order_id,
-      data.id,
-      data.qty,
+      data.product_id,
+      data.quantity,
       data.price,
       data.created_at,
       data.updated_at,

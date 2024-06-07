@@ -86,7 +86,17 @@ export const getByProductsbyCollectionID = (id, callBack) => {
     }
   );
 };
-
+export const getByProductsbyCategoryID = (id, callBack) => {
+  let executeQuery = 'SELECT id, image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE category_id = '+id;
+  db.query(executeQuery,
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+};
 export const getByProductsSubcatId = (id, callBack) => {
   db.query(
     `SELECT id, image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE sub_category_id = ?`,

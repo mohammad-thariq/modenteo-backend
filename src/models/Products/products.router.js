@@ -6,18 +6,19 @@ import {
   deleteProductsById,
   getAllProducts,
   getProductsById,
-  getProductsByStatus, getProductsBySlug, getCollectionProducts,
+  getProductsByStatus, getProductsBySlug, getProductsByCat, getCollectionProducts,
   updateProductsById, getProductsBySubCategory
 } from "./products.controller.js";
 
 const router = express.Router();
 
 router.post("/products/create", authenticateToken, createProducts);
-router.get("/products", authenticateToken, getAllProducts);
-router.get("/products/:id", authenticateToken, getProductsById);
-router.get("/products-slug/:slug", authenticateToken, getProductsBySlug);
+router.get("/products", getAllProducts);
+router.get("/products/:id", getProductsById);
+router.get("/products-slug/:slug", getProductsBySlug);
+router.get("/category-products/:cat", getProductsByCat);
 router.get("/collection-product/:type", getCollectionProducts);
-router.get("/list/products", authenticateToken, getProductsByStatus);
+router.get("/list/products", getProductsByStatus);
 router.patch("/products/update/:id", authenticateToken, updateProductsById);
 router.delete("/products/delete/:id", authenticateToken, deleteProductsById);
 router.get("/products/:cat/:subcat", getProductsBySubCategory);
