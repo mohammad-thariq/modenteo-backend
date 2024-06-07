@@ -35,11 +35,9 @@ export const createOrders = async (req, res) => {
           item.created_at = currentDatetime;
           item.updated_at = currentDatetime;
           createOrderItem(item, (err, results) => {
-            // console.log(err,'err');
-            // console.log(results,'results');
-           
           });
         }));
+
       } catch (error) {
         return res.status(200).json({
           success: 1,
@@ -51,6 +49,7 @@ export const createOrders = async (req, res) => {
         return res.status(200).json({
           success: 1,
           data: "Order Created Successfully",
+          orderNumber: orderNumber
         });
 
       }

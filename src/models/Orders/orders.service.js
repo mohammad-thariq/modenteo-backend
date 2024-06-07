@@ -26,7 +26,18 @@ export const create = (data, callBack) => {
       if (error) {
         return callBack(error);
       }
-      return callBack(null, results);
+      // Clear Cart 
+      db.query(
+        `DELETE FROM cart WHERE user_id=?`,
+        [data.user_id],
+        (error1, results1) => {
+          if (error1) {
+            return callBack(error1);
+          }
+          return callBack(null, results);
+        }
+      );
+
     }
   );
 };
@@ -196,13 +207,10 @@ export const generateNextOrderNumber = async (callBack) => {
   db.query(
     `SELECT order_id FROM orders ORDER BY order_id DESC LIMIT 1`,
     (error, results) => {
-      console.log(results, 'resultsresults')
       if (error) {
         return callBack(defaultOrderNumber);
       }
       if (results.length > 0) {
-        console.log("lastOrderNumber")
-
         const lastOrderNumber = results[0].order_id;
         const numericPart = parseInt(lastOrderNumber.replace('#ORD', ''), 10);
         const nextNumericPart = numericPart + 1;
