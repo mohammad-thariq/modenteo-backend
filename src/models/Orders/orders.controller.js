@@ -51,16 +51,12 @@ export const createOrders = async (req, res) => {
           data: "Order Created Successfully",
           orderNumber: orderNumber
         });
-
       }
-
     });
-
-
   });
-
-
 }
+
+
 export const getOrdersByUserID = (req, res) => {
   const id = req.params.id;
   const query = req.query;
@@ -85,6 +81,8 @@ export const getOrdersByUserID = (req, res) => {
     });
   });
 }
+
+
 export const getOrdersById = (req, res) => {
   const id = req.params.id;
   getByOrdersId(id, (err, results) => {
@@ -134,7 +132,7 @@ export const getOrdersByPaymentStatus = (req, res) => {
 export const getAllOrders = (req, res) => {
   const query = req.query;
 
-  getPaginated(query, tableNames.BRANDS, (err, result, pagination) => {
+  getPaginated(query, tableNames.ORDERS, (err, result, pagination) => {
     if (err) {
       console.log(err);
       return res.status(404).json(err);

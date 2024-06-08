@@ -74,7 +74,7 @@ export const getOrderItemsById = (req, res) => {
 export const getAllOrderItems = (req, res) => {
   const query = req.query;
 
-  getPaginated(query, tableNames.BRANDS, (err, result, pagination) => {
+  getPaginated(query, tableNames.ORDERITEMS, (err, result, pagination) => {
     if (err) {
       console.log(err);
       return res.status(404).json(err);
