@@ -279,6 +279,27 @@ export const getProductsById = (req, res) => {
   });
 };
 
+
+export const getProductsBySubCat = (req, res) => {
+  const id = req.params.subcatid;
+  getByProductsSubcatId(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      products: results,
+    });
+  });
+};
+
 export const getProductsByStatus = (req, res) => {
   getDataByStatus(tableNames.PRODUCTS, async (err, results) => {
     if (err) {

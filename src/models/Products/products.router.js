@@ -7,7 +7,7 @@ import {
   getAllProducts,
   getProductsById,
   getProductsByStatus, getProductsBySlug, getProductsByCat, getCollectionProducts,
-  updateProductsById, getProductsBySubCategory
+  updateProductsById, getProductsBySubCategory, getProductsBySubCat
 } from "./products.controller.js";
 
 const router = express.Router();
@@ -15,6 +15,7 @@ const router = express.Router();
 router.post("/products/create", authenticateToken, createProducts);
 router.get("/products", getAllProducts);
 router.get("/products/:id", getProductsById);
+router.get("/similar-products/:subcatid", getProductsBySubCat);
 router.get("/products-slug/:slug", getProductsBySlug);
 router.get("/category-products/:cat", getProductsByCat);
 router.get("/collection-product/:type", getCollectionProducts);
