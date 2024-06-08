@@ -5,7 +5,7 @@ import {
   updateOrders,
   deleteOrders,
   getOrders,
-  getByOrdersId, generateNextOrderNumber
+  getByOrdersId, getByUserId, generateNextOrderNumber
 } from "./orders.service.js";
 import { create as createOrderItem } from "../OrderItems/orderItems.service.js";
 
@@ -61,7 +61,30 @@ export const createOrders = async (req, res) => {
 
 
 }
+export const getOrdersByUserID = (req, res) => {
+  const id = req.params.id;
+  const query = req.query;
 
+  getByUserId(query, id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        success: 0,
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      success: 1,
+      order: results,
+    });
+  });
+}
 export const getOrdersById = (req, res) => {
   const id = req.params.id;
   getByOrdersId(id, (err, results) => {

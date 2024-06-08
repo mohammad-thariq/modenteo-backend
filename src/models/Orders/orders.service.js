@@ -67,6 +67,20 @@ export const getByOrdersId = (id, callBack) => {
   );
 };
 
+
+export const getByUserId = (data, id, callBack) => {
+  db.query(
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE user_id = ? LIMIT ${data.limit} OFFSET ${data.limit}`,
+    [id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+};
+
 export const getByOrdersUserId = (id, callBack) => {
   db.query(
     `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE user_id = ?`,
