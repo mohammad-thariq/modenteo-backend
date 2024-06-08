@@ -86,7 +86,7 @@ export const login = (req, res) => {
         { result: results },
         UserEnvironmentConfig.jwt_key,
         {
-          expiresIn: "2h",
+          expiresIn: "1h",
         }
       );
       return res.status(200).json({

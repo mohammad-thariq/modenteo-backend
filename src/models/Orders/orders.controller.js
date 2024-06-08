@@ -317,7 +317,7 @@ export const deleteOrdersById = (req, res) => {
     }
     return res.status(200).json({
       success: 1,
-      message: "Brands deleted successfully",
+      message: "deleted successfully",
     });
   });
 };
