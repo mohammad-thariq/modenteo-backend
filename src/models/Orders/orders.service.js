@@ -102,7 +102,7 @@ export const getPendingOrders = (data, callBack) => {
       if (error) {
         return callBack(error);
       }
-      return callBack(null, results.length ? results[0] : null);
+      return callBack(null, results);
     }
   );
 };
@@ -115,7 +115,7 @@ export const getInProcessOrders = (data,callBack) => {
       if (error) {
         return callBack(error);
       }
-      return callBack(null, results.length ? results[0] : null);
+      return callBack(null, results);
     }
   );
 };
@@ -128,7 +128,7 @@ export const getDispatchedOrders = (data, callBack) => {
       if (error) {
         return callBack(error);
       }
-      return callBack(null, results.length ? results[0] : null);
+      return callBack(null, results);
     }
   );
 };
@@ -141,7 +141,7 @@ export const getDeliveredOrders = (data, callBack) => {
       if (error) {
         return callBack(error);
       }
-      return callBack(null, results.length ? results[0] : null);
+      return callBack(null, results);
     }
   );
 };
@@ -154,7 +154,7 @@ export const getDeclinedOrders = (data, callBack) => {
       if (error) {
         return callBack(error);
       }
-      return callBack(null, results.length ? results[0] : null);
+      return callBack(null, results);
     }
   );
 };
