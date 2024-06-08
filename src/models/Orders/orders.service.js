@@ -94,9 +94,9 @@ export const getByOrdersUserId = (id, callBack) => {
   );
 };
 
-export const getPendingOrders = (callBack) => {
+export const getPendingOrders = (data, callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ?`,
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
     [0],
     (error, results) => {
       if (error) {
@@ -106,10 +106,10 @@ export const getPendingOrders = (callBack) => {
     }
   );
 };
-
-export const getInProcessOrders = (callBack) => {
+ 
+export const getInProcessOrders = (data,callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ?`,
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
     [1],
     (error, results) => {
       if (error) {
@@ -120,10 +120,10 @@ export const getInProcessOrders = (callBack) => {
   );
 };
 
-export const getDispatchedOrders = (orderStatus, callBack) => {
+export const getDispatchedOrders = (data, callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ?`,
-    [orderStatus],
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    [2],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -133,10 +133,10 @@ export const getDispatchedOrders = (orderStatus, callBack) => {
   );
 };
 
-export const getCompletedOrders = (orderStatus, callBack) => {
+export const getDeliveredOrders = (data, callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ?`,
-    [orderStatus],
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    [3],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -146,10 +146,10 @@ export const getCompletedOrders = (orderStatus, callBack) => {
   );
 };
 
-export const getDeclinedOrders = (orderStatus, callBack) => {
+export const getDeclinedOrders = (data, callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status= ?`,
-    [orderStatus],
+    `SELECT id, order_id, user_id, billing_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status= ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    [4],
     (error, results) => {
       if (error) {
         return callBack(error);

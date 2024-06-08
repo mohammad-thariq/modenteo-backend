@@ -1,6 +1,6 @@
 import express from "express";
 
-import authenticateToken from "../../middleware/auth/authMiddleWare.js";
+import {authenticateToken} from "../../middleware/auth/authMiddleWare.js";
 import {
   createProducts,
   deleteProductsById,

@@ -5,20 +5,30 @@ import {
   updateOrders,
   deleteOrders,
   getOrders,
-  getByOrdersId, getByUserId, generateNextOrderNumber
+  getByOrdersId,
+  getByUserId,
+  generateNextOrderNumber,
+  getPendingOrders,
+  getInProcessOrders,
+  getDispatchedOrders,
+  getDeclinedOrders,
+  getDeliveredOrders,
 } from "./orders.service.js";
 import { create as createOrderItem } from "../OrderItems/orderItems.service.js";
 
 export const createOrders = async (req, res) => {
   const body = req.body;
   let products = body.products;
-  let orderNumber = '';
+  let orderNumber = "";
   // Generate Order No
   generateNextOrderNumber((results) => {
     orderNumber = results;
     // Create Order
     body.order_id = orderNumber;
-    const currentDatetime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    const currentDatetime = new Date()
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
     body.ordered_date = currentDatetime;
 
     create(body, async (err, results) => {
@@ -30,32 +40,29 @@ export const createOrders = async (req, res) => {
         });
       }
       try {
-        await Promise.all(products.map(async (item) => {
-          item.order_id = orderNumber;
-          item.created_at = currentDatetime;
-          item.updated_at = currentDatetime;
-          createOrderItem(item, (err, results) => {
-          });
-        }));
-
+        await Promise.all(
+          products.map(async (item) => {
+            item.order_id = orderNumber;
+            item.created_at = currentDatetime;
+            item.updated_at = currentDatetime;
+            createOrderItem(item, (err, results) => {});
+          })
+        );
       } catch (error) {
         return res.status(200).json({
           success: 1,
           data: error,
         });
-
-      }
-      finally {
+      } finally {
         return res.status(200).json({
           success: 1,
           data: "Order Created Successfully",
-          orderNumber: orderNumber
+          orderNumber: orderNumber,
         });
       }
     });
   });
-}
-
+};
 
 export const getOrdersByUserID = (req, res) => {
   const id = req.params.id;
@@ -80,8 +87,7 @@ export const getOrdersByUserID = (req, res) => {
       order: results,
     });
   });
-}
-
+};
 
 export const getOrdersById = (req, res) => {
   const id = req.params.id;
@@ -106,25 +112,142 @@ export const getOrdersById = (req, res) => {
   });
 };
 
-export const getOrdersByPaymentStatus = (req, res) => {
-  const id = req.params.id;
-  getByOrdersId(id, (err, results) => {
+export const getAllPendingOrders = (req, res) => {
+  const query = req.query;
+
+  getPaginated(query, tableNames.ORDERS, (err, result, pagination) => {
     if (err) {
       console.log(err);
-      return res.status(500).json({
-        success: 0,
-        message: "Database connection error",
-      });
+      return res.status(404).json(err);
     }
-    if (!results) {
-      return res.status(404).json({
-        success: 0,
-        message: "Record not found",
+    getPendingOrders(result, async (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+      return res.status(200).json({
+        orders: results,
+        pagination: {
+          totalPage: pagination,
+          page: Number(query.page),
+          limit: Number(query.limit),
+        },
       });
+    });
+  });
+};
+
+export const getAllProcessOrders = (req, res) => {
+  const query = req.query;
+
+  getPaginated(query, tableNames.ORDERS, (err, result, pagination) => {
+    if (err) {
+      console.log(err);
+      return res.status(404).json(err);
     }
-    return res.status(200).json({
-      success: 1,
-      order: results,
+    getInProcessOrders(result, async (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+      return res.status(200).json({
+        orders: results,
+        pagination: {
+          totalPage: pagination,
+          page: Number(query.page),
+          limit: Number(query.limit),
+        },
+      });
+    });
+  });
+};
+
+export const getAllDispatchedOrders = (req, res) => {
+  const query = req.query;
+
+  getPaginated(query, tableNames.ORDERS, (err, result, pagination) => {
+    if (err) {
+      console.log(err);
+      return res.status(404).json(err);
+    }
+    getDispatchedOrders(result, async (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+      return res.status(200).json({
+        orders: results,
+        pagination: {
+          totalPage: pagination,
+          page: Number(query.page),
+          limit: Number(query.limit),
+        },
+      });
+    });
+  });
+};
+
+export const getAllDeclinedOrders = (req, res) => {
+  const query = req.query;
+
+  getPaginated(query, tableNames.ORDERS, (err, result, pagination) => {
+    if (err) {
+      console.log(err);
+      return res.status(404).json(err);
+    }
+    getDeclinedOrders(result, async (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+      return res.status(200).json({
+        orders: results,
+        pagination: {
+          totalPage: pagination,
+          page: Number(query.page),
+          limit: Number(query.limit),
+        },
+      });
+    });
+  });
+};
+
+export const getAllDeliveredOrders = (req, res) => {
+  const query = req.query;
+
+  getPaginated(query, tableNames.ORDERS, (err, result, pagination) => {
+    if (err) {
+      console.log(err);
+      return res.status(404).json(err);
+    }
+    getDeliveredOrders(result, async (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+      return res.status(200).json({
+        orders: results,
+        pagination: {
+          totalPage: pagination,
+          page: Number(query.page),
+          limit: Number(query.limit),
+        },
+      });
     });
   });
 };
@@ -174,7 +297,7 @@ export const updateOrdersById = (req, res) => {
       message: "Updated successfully",
     });
   });
-}
+};
 
 export const deleteOrdersById = (req, res) => {
   const data = req.params;

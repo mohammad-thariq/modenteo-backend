@@ -22,6 +22,15 @@ export const getUserByUserEmail = (email, callBack) => {
   });
 };
 
+export const getUserByUserType = (type, callBack) => {
+  db.query(`SELECT * FROM users WHERE type=?`, [type], (error, results) => {
+    if (error) {
+      return callBack(error);
+    }
+    return callBack(null, results.length ? results[0] : null);
+  });
+};
+
 export const getUserByUserEmailAndType = (email, type, callBack) => {
   db.query(
     `SELECT * FROM users WHERE email=? AND type=?`,

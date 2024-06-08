@@ -4,7 +4,7 @@ import {
   deleteCollectionsById,
   getCollectionByStatus, getAllCollections, updateCollectionsById, getCollectionsById
 } from "./collections.controller.js";
-import authenticateToken from "../../middleware/auth/authMiddleWare.js";
+import {authenticateToken} from "../../middleware/auth/authMiddleWare.js";
 
 const router = express.Router();
 

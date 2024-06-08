@@ -6,6 +6,7 @@ import {
   updateUser,
   deleteUser,
   getUserByUserEmailAndType,
+  getUserByUserType,
 } from "./users.service.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -136,9 +137,28 @@ export const getUserByEmail = (req, res) => {
         error: userNotificationMessage.error.not_found,
       });
     }
-    results.password = undefined;
     return res.status(200).json({
       data: results,
+    });
+  });
+};
+
+export const getUserByType = (req, res) => {
+  const type = req.params.type;
+  getUserByUserType(type, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        error: commonNotificationMessage.error.server,
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        error: userNotificationMessage.error.not_found,
+      });
+    }
+    return res.status(200).json({
+      user: results,
     });
   });
 };

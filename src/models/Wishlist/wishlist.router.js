@@ -4,7 +4,7 @@ import {
   deleteWishlistById,
   getAllWishlist,
 } from "./wishlist.controller.js";
-import authenticateToken from "../../middleware/auth/authMiddleWare.js";
+import {authenticateToken} from "../../middleware/auth/authMiddleWare.js";
 
 const router = express.Router();
 
