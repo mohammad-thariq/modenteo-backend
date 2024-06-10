@@ -74,27 +74,16 @@ export const getUserAddressByUserId = (req, res) => {
 
 export const getAllUserAddress = (req, res) => {
   const query = req.query;
-  getPaginated(query, tableNames.USERADDRESS, (err, result, pagination) => {
+  getUserAddress(query, async (err, results) => {
     if (err) {
       console.log(err);
-      return res.status(404).json(err);
-    }
-    getUserAddress(result, async (err, results) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({
-          success: 0,
-          message: "Database connection error",
-        });
-      }
-      return res.status(200).json({
-        user_address: results,
-        pagination: {
-          totalPage: pagination,
-          page: Number(query.page),
-          limit: Number(query.limit),
-        },
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
       });
+    }
+    return res.status(200).json({
+      user_address: results,
     });
   });
 };

@@ -53,7 +53,7 @@ export const getByUserAddressId = (id, callBack) => {
 
 export const getUserAddress = (data, callBack) => {
   db.query(
-    `SELECT id, user_id, fullName, streetAddress, state, city, zipCode, country, phoneNumber, type, is_enable FROM user_address LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT id, user_id, fullName, streetAddress, state, city, zipCode, country, phoneNumber, type, is_enable FROM user_address where user_id = ${data?.user_id}`,
     [],
     (error, results) => {
       if (error) {
