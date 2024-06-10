@@ -11,8 +11,7 @@ import {
 
 export const createCustomerService = (req, res) => {
   const body = req.body;
-  getUploadFile(
-    body,
+  getUploadFile(req,
     tableNames.MANAGEWEBSITE.CUSTOMERSERVICE,
     (err, result) => {
       if (err) {
@@ -93,8 +92,7 @@ export const updateCustomerServiceById = (req, res) => {
   const params = req.params;
   const body = req.body;
   console.log(params, "params");
-  getUploadFile(
-    body,
+  getUploadFile(req,
     tableNames.MANAGEWEBSITE.CUSTOMERSERVICE,
     (err, result) => {
       if (err) {
