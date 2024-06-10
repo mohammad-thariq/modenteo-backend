@@ -7,6 +7,10 @@ import {
   deleteUser,
   getUserByUserEmailAndType,
   getUserByUserType,
+  getUserTodayOrders,
+  getOrderCount,
+  getCartCount,
+  getWishlistCount
 } from "./users.service.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -36,9 +40,8 @@ export const createUser = (req, res) => {
 
   if (!validateType.includes(body.type)) {
     return res.status(404).json({
-      error: `${
-        userNotificationMessage.error.register.type
-      } ${validateType.join(", ")}`,
+      error: `${userNotificationMessage.error.register.type
+        } ${validateType.join(", ")}`,
     });
   }
 
@@ -61,9 +64,8 @@ export const login = (req, res) => {
 
   if (!validateType.includes(body.type)) {
     return res.status(404).json({
-      error: `${
-        userNotificationMessage.error.register.type
-      } ${validateType.join(", ")}`,
+      error: `${userNotificationMessage.error.register.type
+        } ${validateType.join(", ")}`,
     });
   }
 
@@ -197,9 +199,8 @@ export const updateUsers = (req, res) => {
 
   if (!validateType.includes(body.type)) {
     return res.status(404).json({
-      error: `${
-        userNotificationMessage.error.register.type
-      } ${validateType.join(", ")}`,
+      error: `${userNotificationMessage.error.register.type
+        } ${validateType.join(", ")}`,
     });
   }
 
@@ -235,3 +236,56 @@ export const deleteUserById = (req, res) => {
     });
   });
 };
+export const getUserDashboard = (req, res) => {
+  const id = req.params.id;
+  getUserTodayOrders(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        error: commonNotificationMessage.error.server,
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        error: userNotificationMessage.error.not_found,
+      });
+    }
+
+    // Getting order count
+    getOrderCount(id, (err, orderCount) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          error: commonNotificationMessage.error.server,
+        });
+      }
+
+      // Getting cart count
+      getCartCount(id, (err, cartCount) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            error: commonNotificationMessage.error.server,
+          });
+        }
+
+        // Getting wishlist count
+        getWishlistCount(id, (err, wishlistCount) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({
+              error: commonNotificationMessage.error.server,
+            });
+          }
+          // Sending response with all counts
+          return res.status(200).json({
+            orders: results,
+            order_count: orderCount[0].order_count,
+            cart_count: cartCount[0].cart_count,
+            wishlist_count: wishlistCount[0].wishlist_count,
+          });
+        });
+      });
+    });
+  });
+}
