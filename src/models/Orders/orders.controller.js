@@ -67,24 +67,33 @@ export const createOrders = async (req, res) => {
 export const getOrdersByUserID = (req, res) => {
   const id = req.params.id;
   const query = req.query;
-
-  getByUserId(query, id, (err, results) => {
+  getPaginated(query, tableNames.ORDERS, (err, result, pagination) => {
     if (err) {
       console.log(err);
-      return res.status(500).json({
-        success: 0,
-        message: "Database connection error",
-      });
+      return res.status(404).json(err);
     }
-    if (!results) {
-      return res.status(404).json({
-        success: 0,
-        message: "Record not found",
+    getByUserId(result, id, async (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+      if (!results) {
+        return res.status(404).json({
+          success: 0,
+          message: "Record not found",
+        });
+      }
+      return res.status(200).json({
+        order: results,
+        pagination: {
+          totalPage: pagination,
+          page: Number(query.page),
+          limit: Number(query.limit),
+        },
       });
-    }
-    return res.status(200).json({
-      success: 1,
-      order: results,
     });
   });
 };

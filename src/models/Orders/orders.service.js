@@ -26,7 +26,7 @@ export const create = (data, callBack) => {
       if (error) {
         return callBack(error);
       }
-      // Clear Cart 
+      // Clear Cart
       db.query(
         `DELETE FROM cart WHERE user_id=?`,
         [data.user_id],
@@ -37,14 +37,13 @@ export const create = (data, callBack) => {
           return callBack(null, results);
         }
       );
-
     }
   );
 };
 
 export const getByOrdersOrderId = (id, callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id,shipping_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_id = ?`,
+    `SELECT * FROM orders WHERE order_id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -57,7 +56,7 @@ export const getByOrdersOrderId = (id, callBack) => {
 
 export const getByOrdersId = (id, callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id,shipping_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE id = ?`,
+    `SELECT * FROM orders WHERE id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -68,36 +67,29 @@ export const getByOrdersId = (id, callBack) => {
   );
 };
 
-
 export const getByUserId = (data, id, callBack) => {
-  db.query(
-    `SELECT id, order_id, user_id, billing_id,shipping_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE user_id = ? LIMIT ${data.limit} OFFSET ${data.limit}`,
-    [id],
-    (error, results) => {
-      if (error) {
-        return callBack(error);
-      }
-      return callBack(null, results);
+  const query = `SELECT * FROM orders WHERE user_id = ? LIMIT ${data.limit} OFFSET ${data.offset}`;
+
+  db.query(query, [id], (error, results) => {
+    if (error) {
+      return callBack(error);
     }
-  );
+    return callBack(null, results);
+  });
 };
 
 export const getByOrdersUserId = (id, callBack) => {
-  db.query(
-    `SELECT id, order_id, user_id, billing_id,shipping_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE user_id = ?`,
-    [id],
-    (error, results) => {
-      if (error) {
-        return callBack(error);
-      }
-      return callBack(null, results.length ? results[0] : null);
+  db.query(`SELECT * FROM orders WHERE user_id = ?`, [id], (error, results) => {
+    if (error) {
+      return callBack(error);
     }
-  );
+    return callBack(null, results.length ? results[0] : null);
+  });
 };
 
 export const getPendingOrders = (data, callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id,shipping_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT * FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
     [0],
     (error, results) => {
       if (error) {
@@ -110,7 +102,7 @@ export const getPendingOrders = (data, callBack) => {
 
 export const getInProcessOrders = (data, callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id,shipping_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT * FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
     [1],
     (error, results) => {
       if (error) {
@@ -123,7 +115,7 @@ export const getInProcessOrders = (data, callBack) => {
 
 export const getDispatchedOrders = (data, callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id,shipping_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT * FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
     [2],
     (error, results) => {
       if (error) {
@@ -136,7 +128,7 @@ export const getDispatchedOrders = (data, callBack) => {
 
 export const getDeliveredOrders = (data, callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id,shipping_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT * FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
     [3],
     (error, results) => {
       if (error) {
@@ -149,7 +141,7 @@ export const getDeliveredOrders = (data, callBack) => {
 
 export const getDeclinedOrders = (data, callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id,shipping_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders WHERE order_status= ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT * FROM orders WHERE order_status= ? LIMIT ${data.limit} OFFSET ${data.offset}`,
     [4],
     (error, results) => {
       if (error) {
@@ -162,7 +154,7 @@ export const getDeclinedOrders = (data, callBack) => {
 
 export const getOrders = (data, callBack) => {
   db.query(
-    `SELECT id, order_id, user_id, billing_id,shipping_id, payment_status, order_status, ordered_date, order_completed_date, order_cancelled_date, order_delivered_date, total_amount, shipping_method, shipping_cost, discount_amount, mode_of_payment, transection_id, payment_approval_date FROM orders LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT * FROM orders LIMIT ${data.limit} OFFSET ${data.offset}`,
     [],
     (error, results) => {
       if (error) {
@@ -183,7 +175,7 @@ export const updateOrders = (data, id, callBack) => {
       data.order_cancelled_date,
       data.order_delivered_date,
       data.payment_approval_date,
-      id
+      id,
     ],
     (error, results) => {
       if (error) {
@@ -208,7 +200,7 @@ export const deleteOrders = (data, callBack) => {
 };
 
 export const generateNextOrderNumber = async (callBack) => {
-  const defaultOrderNumber = '#ORD0001';
+  const defaultOrderNumber = "#ORD0001";
   db.query(
     `SELECT order_id FROM orders ORDER BY order_id DESC LIMIT 1`,
     (error, results) => {
@@ -217,16 +209,15 @@ export const generateNextOrderNumber = async (callBack) => {
       }
       if (results.length > 0) {
         const lastOrderNumber = results[0].order_id;
-        const numericPart = parseInt(lastOrderNumber.replace('#ORD', ''), 10);
+        const numericPart = parseInt(lastOrderNumber.replace("#ORD", ""), 10);
         const nextNumericPart = numericPart + 1;
-        const nextOrderNumber = `#ORD${nextNumericPart.toString().padStart(4, '0')}`;
+        const nextOrderNumber = `#ORD${nextNumericPart
+          .toString()
+          .padStart(4, "0")}`;
         return callBack(nextOrderNumber);
-
       } else {
         return callBack(defaultOrderNumber);
       }
-
     }
   );
-
 };
