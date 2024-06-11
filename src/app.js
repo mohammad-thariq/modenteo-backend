@@ -20,7 +20,8 @@ import PopularProductsRoutes from "./models/ManageWebsite/PopularProducts/popula
 import FashionProductsRoutes from "./models/ManageWebsite/FashionProducts/fashions.router.js";
 import OrdersRoutes from "./models/Orders/orders.router.js";
 import OrderItemsRoutes from "./models/OrderItems/orderItems.router.js";
-import UserAddressRoutes from "./models/UserAddress/userAddress.router.js"
+import UserAddressRoutes from "./models/UserAddress/userAddress.router.js";
+import SettingsRoutes from "./models/Settings/settings.router.js";
 import fileUpload from "express-fileupload";
 import { fileURLToPath } from "url";
 
@@ -60,7 +61,8 @@ app.use(
   FashionProductsRoutes,
   OrdersRoutes,
   OrderItemsRoutes,
-  UserAddressRoutes
+  UserAddressRoutes,
+  SettingsRoutes
 );
 // app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
@@ -74,10 +76,9 @@ app.listen(
     : ServerEnvironmentConfig.server.local,
   () => {
     console.log(
-      `Server started on port ${
-        ServerEnvironmentConfig.server.line === "production"
-          ? ServerEnvironmentConfig.server.live
-          : ServerEnvironmentConfig.server.local
+      `Server started on port ${ServerEnvironmentConfig.server.line === "production"
+        ? ServerEnvironmentConfig.server.live
+        : ServerEnvironmentConfig.server.local
       }`
     );
   }
