@@ -10,7 +10,7 @@ import {
   getUserTodayOrders,
   getOrderCount,
   getCartCount,
-  getWishlistCount
+  getWishlistCount,
 } from "./users.service.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -40,8 +40,9 @@ export const createUser = (req, res) => {
 
   if (!validateType.includes(body.type)) {
     return res.status(404).json({
-      error: `${userNotificationMessage.error.register.type
-        } ${validateType.join(", ")}`,
+      error: `${
+        userNotificationMessage.error.register.type
+      } ${validateType.join(", ")}`,
     });
   }
 
@@ -64,8 +65,9 @@ export const login = (req, res) => {
 
   if (!validateType.includes(body.type)) {
     return res.status(404).json({
-      error: `${userNotificationMessage.error.register.type
-        } ${validateType.join(", ")}`,
+      error: `${
+        userNotificationMessage.error.register.type
+      } ${validateType.join(", ")}`,
     });
   }
 
@@ -146,21 +148,33 @@ export const getUserByEmail = (req, res) => {
 };
 
 export const getUserByType = (req, res) => {
+  const query = req.query;
   const type = req.params.type;
-  getUserByUserType(type, (err, results) => {
+  getPaginated(query, tableNames.USERS, (err, result, pagination) => {
     if (err) {
       console.log(err);
-      return res.status(500).json({
-        error: commonNotificationMessage.error.server,
-      });
+      return res.status(404).json(err);
     }
-    if (!results) {
-      return res.status(404).json({
-        error: userNotificationMessage.error.not_found,
+    getUserByUserType(result, type, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          error: commonNotificationMessage.error.server,
+        });
+      }
+      if (!results) {
+        return res.status(404).json({
+          error: userNotificationMessage.error.not_found,
+        });
+      }
+      return res.status(200).json({
+        user: results,
+        pagination: {
+          totalPage: pagination,
+          page: Number(query.page),
+          limit: Number(query.limit),
+        },
       });
-    }
-    return res.status(200).json({
-      user: results,
     });
   });
 };
@@ -199,8 +213,9 @@ export const updateUsers = (req, res) => {
 
   if (!validateType.includes(body.type)) {
     return res.status(404).json({
-      error: `${userNotificationMessage.error.register.type
-        } ${validateType.join(", ")}`,
+      error: `${
+        userNotificationMessage.error.register.type
+      } ${validateType.join(", ")}`,
     });
   }
 
@@ -288,4 +303,4 @@ export const getUserDashboard = (req, res) => {
       });
     });
   });
-}
+};
