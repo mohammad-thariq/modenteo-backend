@@ -22,6 +22,7 @@ import OrdersRoutes from "./models/Orders/orders.router.js";
 import OrderItemsRoutes from "./models/OrderItems/orderItems.router.js";
 import UserAddressRoutes from "./models/UserAddress/userAddress.router.js";
 import SettingsRoutes from "./models/Settings/settings.router.js";
+import PageRoutes from "./models/Pages/pages.router.js";
 import fileUpload from "express-fileupload";
 import { fileURLToPath } from "url";
 
@@ -62,7 +63,8 @@ app.use(
   OrdersRoutes,
   OrderItemsRoutes,
   UserAddressRoutes,
-  SettingsRoutes
+  SettingsRoutes,
+  PageRoutes
 );
 // app.use('/upload', express.static(path.join(__dirname, 'upload')));
 

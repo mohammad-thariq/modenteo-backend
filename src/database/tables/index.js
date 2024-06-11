@@ -6,6 +6,7 @@ export const tableNames = {
   BRANDS: "brands",
   PRODUCTS: "products",
   COLLECTIONS: "collections",
+  PAGES: "pages",
   CART: "cart",
   WISHLIST: "wishlist",
   ORDERS: "orders",
