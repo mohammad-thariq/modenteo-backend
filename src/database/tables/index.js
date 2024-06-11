@@ -17,7 +17,7 @@ export const tableNames = {
     CUSTOMERSERVICE: "customer_service",
     DISCOUNTBANNER: "discount_banner",
     FASHIONPRODUCTS: "fashion_products",
-    POPULARPRODUCTS: "popular_products",
+    POPULARPRODUCTS: "popular_product",
     CATEGORIES: "categories",
   },
 };
