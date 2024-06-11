@@ -8,7 +8,7 @@ import {
   deleteProducts,
   getByProductsId, getByProductsSlug, getByProductsbyCollection, getByProductsbyCollectionID,
   getProducts,
-  updateProducts, getByProductsSubcatId, getByProductsbyCategoryID
+  updateProducts, getByProductsSubcatId, getByProductsbyCategoryID, getByProductsbyBrandID
 } from "./products.service.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import { getBySubCategorySlug } from "../SubCategories/subCategories.service.js";
@@ -283,6 +283,67 @@ export const getProductsById = (req, res) => {
 export const getProductsBySubCat = (req, res) => {
   const id = req.params.subcatid;
   getByProductsSubcatId(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      products: results,
+    });
+  });
+};
+
+
+export const getProductsByCollection = (req, res) => {
+  const id = req.params.id;
+  getByProductsbyCollectionID(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      products: results,
+    });
+  });
+};
+
+export const getProductsByBrand = (req, res) => {
+  const id = req.params.id;
+  getByProductsbyBrandID(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      products: results,
+    });
+  });
+};
+
+export const getProductsByMainCategory = (req, res) => {
+  const id = req.params.id;
+  getByProductsbyCategoryID(id, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({

@@ -64,7 +64,7 @@ export const getByProductsSlug = (id, callBack) => {
 };
 
 export const getByProductsbyCollection = (id, callBack) => {
-  let executeQuery = 'SELECT id, image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE '+id+' = 1';
+  let executeQuery = 'SELECT id, image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE ' + id + ' = 1';
   db.query(executeQuery,
     (error, results) => {
       if (error) {
@@ -76,7 +76,19 @@ export const getByProductsbyCollection = (id, callBack) => {
 };
 
 export const getByProductsbyCollectionID = (id, callBack) => {
-  let executeQuery = 'SELECT id, image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE collection_id = '+id;
+  let executeQuery = 'SELECT id, image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE collection_id = ' + id;
+  db.query(executeQuery,
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+};
+
+export const getByProductsbyBrandID = (id, callBack) => {
+  let executeQuery = 'SELECT id, image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE brand_id = ' + id;
   db.query(executeQuery,
     (error, results) => {
       if (error) {
@@ -87,7 +99,7 @@ export const getByProductsbyCollectionID = (id, callBack) => {
   );
 };
 export const getByProductsbyCategoryID = (id, callBack) => {
-  let executeQuery = 'SELECT id, image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE category_id = '+id;
+  let executeQuery = 'SELECT id, image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, price, offer_price, stock_quantity, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE category_id = ' + id;
   db.query(executeQuery,
     (error, results) => {
       if (error) {
