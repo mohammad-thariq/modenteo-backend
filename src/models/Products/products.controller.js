@@ -15,6 +15,8 @@ import { getBySubCategorySlug } from "../SubCategories/subCategories.service.js"
 import { getByCategorySlug } from "../Categories/categories.service.js";
 export const createProducts = (req, res) => {
   const body = req.body;
+  const galleryUrls = req.body['gallery[]'];
+  body.gallery = galleryUrls.join();
   getValidateByName(
     body.name,
     tableNames.PRODUCTS,
@@ -423,6 +425,8 @@ export const updateProductsById = (req, res) => {
       return res.status(400).json(err);
     }
     body.image = result;
+    const galleryUrls = req.body['gallery[]'];
+    body.gallery = galleryUrls.join();
     updateProducts(body, params.id, (err, results) => {
       if (err) {
         console.log(err);
