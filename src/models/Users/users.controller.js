@@ -1,17 +1,4 @@
-import {
-  create,
-  getUserByUserEmail,
-  getUserByUserId,
-  getUsers,
-  updateUser,
-  deleteUser,
-  getUserByUserEmailAndType,
-  getUserByUserType,
-  getUserTodayOrders,
-  getOrderCount,
-  getCartCount,
-  getWishlistCount,
-} from "./users.service.js";
+import { create, getUserByUserEmail, getUserByUserId, getUsers, updateUser, deleteUser, getUserByUserEmailAndType, getUserByUserType, getUserTodayOrders, getOrderCount, getCartCount, getWishlistCount, getOrderData, getTotalUsers, getTotalProducts, getTotalSales, getTodayOrders } from "./users.service.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import UserEnvironmentConfig from "../../config/database.config.js";
@@ -40,9 +27,8 @@ export const createUser = (req, res) => {
 
   if (!validateType.includes(body.type)) {
     return res.status(404).json({
-      error: `${
-        userNotificationMessage.error.register.type
-      } ${validateType.join(", ")}`,
+      error: `${userNotificationMessage.error.register.type
+        } ${validateType.join(", ")}`,
     });
   }
 
@@ -65,9 +51,8 @@ export const login = (req, res) => {
 
   if (!validateType.includes(body.type)) {
     return res.status(404).json({
-      error: `${
-        userNotificationMessage.error.register.type
-      } ${validateType.join(", ")}`,
+      error: `${userNotificationMessage.error.register.type
+        } ${validateType.join(", ")}`,
     });
   }
 
@@ -213,9 +198,8 @@ export const updateUsers = (req, res) => {
 
   if (!validateType.includes(body.type)) {
     return res.status(404).json({
-      error: `${
-        userNotificationMessage.error.register.type
-      } ${validateType.join(", ")}`,
+      error: `${userNotificationMessage.error.register.type
+        } ${validateType.join(", ")}`,
     });
   }
 
@@ -303,4 +287,103 @@ export const getUserDashboard = (req, res) => {
       });
     });
   });
+};
+export const getOrders = () => {
+  return new Promise((resolve, reject) => {
+    getDataByStatus(tableNames.MANAGEWEBSITE.CUSTOMERSERVICE, (err, results) => {
+      if (err) {
+        console.log(err);
+        reject("Database connection error");
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+
+export const getOrderCountData = (val) => {
+  return new Promise((resolve, reject) => {
+    getOrderData(val, (err, results) => {
+      if (err) {
+        console.log(err);
+        reject("Database connection error");
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+
+export const getTotalSalesAmt = () => {
+  return new Promise((resolve, reject) => {
+    getTotalSales((err, results) => {
+      if (err) {
+        console.log(err);
+        reject("Database connection error");
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+
+
+export const getTotalUsersCount = () => {
+  return new Promise((resolve, reject) => {
+    getTotalUsers((err, results) => {
+      if (err) {
+        console.log(err);
+        reject("Database connection error");
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+export const getTodayOrdersData = () => {
+  return new Promise((resolve, reject) => {
+    getTodayOrders((err, results) => {
+      if (err) {
+        console.log(err);
+        reject("Database connection error");
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+export const getTotalProductsCount = () => {
+  return new Promise((resolve, reject) => {
+    getTotalProducts((err, results) => {
+      if (err) {
+        console.log(err);
+        reject("Database connection error");
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+export const getAdminDashboard = async (req, res) => {
+  try {
+    const totalOrder = await getOrderCountData(0);
+    const pendingOrder = await getOrderCountData(0);
+    const declinedOrder = await getOrderCountData(4);
+    const totalUser = await getTotalUsersCount();
+    const totalProduct = await getTotalProductsCount();
+    const totalSales = await getTotalSalesAmt();
+    const completeOrder = await getOrderCountData(3);
+    const todayOrders = await getTodayOrdersData();
+
+    return res.status(200).json({ todayOrders: todayOrders, totalOrder: totalOrder[0].count, pendingOrder: pendingOrder[0].count, declinedOrder: declinedOrder[0].count, totalUser: totalUser[0].count, totalProduct: totalProduct[0].count, totalSales: totalSales[0].total_sales, completeOrder: completeOrder[0].count });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };

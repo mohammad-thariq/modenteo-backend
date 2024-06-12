@@ -8,7 +8,7 @@ import {
   deleteUserById,
   getUserByEmail,
   getUserByType,
-  getUserDashboard,
+  getUserDashboard, getAdminDashboard
 } from "./users.controller.js";
 import {
   authenticateToken,
@@ -26,6 +26,7 @@ router.get("/users", authenticateToken, getAllUsers);
 router.patch("/user/:id", authenticateToken, updateUsers);
 router.delete("/user/:id", authenticateToken, deleteUserById);
 router.get("/user/dashboard/:id", getUserDashboard);
+router.get("/admin/dashboard", getAdminDashboard);
 
 // Route to check token validity
 router.get("/validate-token", checkToken);

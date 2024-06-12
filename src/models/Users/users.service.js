@@ -46,6 +46,19 @@ export const getUserTodayOrders = (id, callBack) => {
     }
   );
 };
+
+export const getTodayOrders = (callBack) => {
+  db.query(
+    `SELECT o.id, o.order_id, o.user_id, o.billing_id, o.shipping_id, o.payment_status, o.order_status, o.ordered_date, o.order_completed_date, o.order_cancelled_date, o.order_delivered_date, o.total_amount, o.shipping_method, o.shipping_cost, o.discount_amount, o.mode_of_payment, o.transection_id, o.payment_approval_date FROM orders o WHERE DATE(o.ordered_date) = CURDATE()`,
+    [],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+};
 export const getOrderCount = (id, callBack) => {
   db.query(
     `SELECT COUNT(*) as order_count FROM orders WHERE user_id = ?`,
@@ -110,7 +123,7 @@ export const getUserByUserId = (id, callBack) => {
   );
 };
 
-export const getUserDashboard = (id, callBack) => {};
+export const getUserDashboard = (id, callBack) => { };
 export const getUsers = async (data, callBack) => {
   db.query(
     `SELECT id, first_name, last_name, email, type FROM users LIMIT ${data.limit} OFFSET ${data.offset}`,
@@ -141,6 +154,57 @@ export const deleteUser = (data, callBack) => {
   db.query(
     `DELETE FROM users WHERE users.id=?`,
     [data.id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+};
+
+
+export const getOrderData = (value, callBack) => {
+  db.query(
+    `SELECT COUNT(*) as count FROM orders WHERE order_status = ?`,
+    [value],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+};
+export const getTotalProducts = (callBack) => {
+  db.query(
+    `SELECT COUNT(*) as count FROM products WHERE status = 1`,
+    [],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+};
+export const getTotalUsers = (callBack) => {
+  db.query(
+    `SELECT COUNT(*) as count FROM users WHERE type = ?`,
+    ['user'],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+};
+
+export const getTotalSales = (callBack) => {
+  db.query(
+    `SELECT SUM(total_amount) as total_sales FROM orders WHERE order_status = 3`,
+    [],
     (error, results) => {
       if (error) {
         return callBack(error);
