@@ -30,18 +30,29 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+const corsOptions = {
+  origin: [
+    'https://dev-modenteo.vercel.app',
+    'https://dev-modenteo-admin.vercel.app'
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(fileUpload());
 const publicPath = path.join(__dirname, "../public");
 app.use(express.static(publicPath));
 
-let corsOptions = {
-  origin: "*",
-  credentials: true,
-};
+// let corsOptions = {
+//   origin: "*",
+//   credentials: true,
+// };
 
-app.use(cors(corsOptions));
 
 app.use(
   "/v1",
