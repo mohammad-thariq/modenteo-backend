@@ -6,17 +6,23 @@ import { getByCollectionsSlug } from "../Collections/collections.service.js";
 import {
   create,
   deleteProducts,
-  getByProductsId, getByProductsSlug, getByProductsbyCollection, getByProductsbyCollectionID,
+  getByProductsId,
+  getByProductsSlug,
+  getByProductsbyCollection,
+  getByProductsbyCollectionID,
   getProducts,
-  updateProducts, getByProductsSubcatId, getByProductsbyCategoryID, getByProductsbyBrandID
+  updateProducts,
+  getByProductsSubcatId,
+  getByProductsbyCategoryID,
+  getByProductsbyBrandID,
 } from "./products.service.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import { getBySubCategorySlug } from "../SubCategories/subCategories.service.js";
 import { getByCategorySlug } from "../Categories/categories.service.js";
 export const createProducts = (req, res) => {
   const body = req.body;
-  const galleryUrls = req.body['gallery[]'];
-  body.gallery = galleryUrls.join();
+  const galleryUrls = req.body["gallery[]"];
+  body.gallery = galleryUrls?.join();
   getValidateByName(
     body.name,
     tableNames.PRODUCTS,
@@ -97,7 +103,7 @@ export const getProductsBySubCategory = (req, res) => {
       });
     });
   });
-}
+};
 
 export const getNewCollectionProduct = (req, res) => {
   const id = req.params.id;
@@ -140,24 +146,24 @@ export const getSeasonCollectionProduct = (req, res) => {
 
 export const getCollectionProducts = (req, res) => {
   const id = req.params.type;
-  let type = '';
+  let type = "";
   switch (id) {
-    case 'new-arrivals':
-      type = 'new_arrival';
+    case "new-arrivals":
+      type = "new_arrival";
       break;
-    case 'best-selling':
-      type = 'best_product';
+    case "best-selling":
+      type = "best_product";
       break;
-    case 'top-products':
-      type = 'top_product';
+    case "top-products":
+      type = "top_product";
       break;
-    case 'featured-products':
-      type = 'featured_product';
+    case "featured-products":
+      type = "featured_product";
       break;
     default:
-      type = 'get-collection';
+      type = "get-collection";
   }
-  if (type === 'get-collection') {
+  if (type === "get-collection") {
     getByCollectionsSlug(id, (err, results) => {
       if (err) {
         console.log(err);
@@ -205,7 +211,6 @@ export const getCollectionProducts = (req, res) => {
       });
     });
   }
-
 };
 
 export const getProductsByCat = (req, res) => {
@@ -281,7 +286,6 @@ export const getProductsById = (req, res) => {
   });
 };
 
-
 export const getProductsBySubCat = (req, res) => {
   const id = req.params.subcatid;
   getByProductsSubcatId(id, (err, results) => {
@@ -301,7 +305,6 @@ export const getProductsBySubCat = (req, res) => {
     });
   });
 };
-
 
 export const getProductsByCollection = (req, res) => {
   const id = req.params.id;
@@ -425,8 +428,8 @@ export const updateProductsById = (req, res) => {
       return res.status(400).json(err);
     }
     body.image = result;
-    const galleryUrls = req.body['gallery[]'];
-    body.gallery = galleryUrls.join();
+    const galleryUrls = req.body["gallery[]"];
+    body.gallery = galleryUrls?.join();
     updateProducts(body, params.id, (err, results) => {
       if (err) {
         console.log(err);

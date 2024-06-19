@@ -89,9 +89,10 @@ app.listen(
     : ServerEnvironmentConfig.server.local,
   () => {
     console.log(
-      `Server started on port ${ServerEnvironmentConfig.server.line === "production"
-        ? ServerEnvironmentConfig.server.live
-        : ServerEnvironmentConfig.server.local
+      `Server started on port ${
+        ServerEnvironmentConfig.server.line === "production"
+          ? ServerEnvironmentConfig.server.live
+          : ServerEnvironmentConfig.server.local
       }`
     );
   }
