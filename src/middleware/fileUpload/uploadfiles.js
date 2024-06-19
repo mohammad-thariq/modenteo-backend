@@ -1,37 +1,38 @@
-import path from "path";
-import { fileURLToPath } from "url";
+import AWS from "aws-sdk";
 import fs from "fs";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import DataBaseEnvironmentConfig from "../../config/database.config.js";
+
+AWS.config.update({ region: "eu-north-1" });
+const s3 = new AWS.S3({
+  accessKeyId: DataBaseEnvironmentConfig.s3_access_key_id,
+  secretAccessKey: DataBaseEnvironmentConfig.s3_secret_access_key,
+});
 
 export const getUploadFile = (req, table_name, callBack) => {
-
   const base64ToFileObject = (dataURI, callBack) => {
-    const base64Data = dataURI.split(';base64,').pop();
-    let imgName = Date.now() + '.jpg';
+    const base64Data = dataURI.split(";base64,").pop();
+    let imgName = Date.now() + ".jpg";
 
-    const filePath = path.join(
-      __dirname,
-      "..",
-      "..",
-      "..",
-      "public",
-      "upload",
-      `${table_name}-${imgName}`
-    );
-    const binaryData = Buffer.from(base64Data, 'base64');
-    fs.writeFile(filePath, binaryData, (err) => {
+    const binaryData = Buffer.from(base64Data, "base64");
+
+    const uploadParams = {
+      Bucket: "modenteo-file",
+      Key: `${table_name}-${imgName}`,
+      Body: binaryData,
+      ContentEncoding: "base64",
+      ContentType: "image/jpeg",
+    };
+
+    s3.upload(uploadParams, (err, data) => {
       if (err) {
         return callBack({
           error: "Problem in Uploading Image",
         });
       }
-      return callBack(
-        null,
-        `/${"upload"}/${table_name}-${imgName}`
-      );
+      return callBack(null, data.Location);
     });
-  }
+  };
+
   let files = req.files;
   let body = req.body;
   if (!files || files.length === 0) {
@@ -45,43 +46,41 @@ export const getUploadFile = (req, table_name, callBack) => {
       let baseUrl = process.env.BASEURL;
       const modifiedUrl = base64Image.replace(baseUrl, "");
 
-      return callBack(
-        null,
-        modifiedUrl
-      );
+      return callBack(null, modifiedUrl);
     } else {
       return base64ToFileObject(base64Image, callBack);
     }
-  }
-  else if (files && files.length >= 0) {
+  } else if (files && files.length >= 0) {
     let sampleFile;
-    let uploadPath;
     if (!files || Object.keys(files).length === 0) {
       return callBack({ error: "No files were uploaded." });
     }
 
-    sampleFile = files;
-    let imgName = Date.now() + '-' + sampleFile.image.name + '.jpg';
+    sampleFile = files.image;
+    let imgName = Date.now() + "-" + sampleFile.name + ".jpg";
 
-    uploadPath = path.join(
-      __dirname,
-      "..",
-      "..",
-      "..",
-      "public",
-      "upload",
-      `${table_name}-${imgName}`
-    );
-    sampleFile.image.mv(uploadPath, function (err) {
+    fs.readFile(sampleFile.tempFilePath, (err, data) => {
       if (err) {
         return callBack({
-          error: "Problem in Uploading Image",
+          error: "Problem reading file",
         });
       }
-      return callBack(
-        null,
-        `/${"upload"}/${table_name}-${imgName}`
-      );
+
+      const uploadParams = {
+        Bucket: "modenteo-file",
+        Key: `${table_name}-${imgName}`,
+        Body: data,
+        ContentType: sampleFile.mimetype,
+      };
+
+      s3.upload(uploadParams, (err, data) => {
+        if (err) {
+          return callBack({
+            error: "Problem in Uploading Image",
+          });
+        }
+        return callBack(null, data.Location);
+      });
     });
   }
 };
