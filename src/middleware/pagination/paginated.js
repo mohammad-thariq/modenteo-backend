@@ -11,7 +11,7 @@ export const getPaginated = async (data, table, callBack) => {
   const limit = data.limit;
   const offset = (data.page - 1) * data.limit;
   db.query(`SELECT COUNT(*) AS count FROM ${table}`, [], (error, results) => {
-    const totalPages = Math.ceil(results[0].count / limit);
+    const totalPages = Math.ceil(results?.[0].count / limit);
 
     if (error) {
       return callBack(error);
