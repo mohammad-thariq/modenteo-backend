@@ -150,6 +150,19 @@ export const updateUser = (data, id, callBack) => {
   );
 };
 
+export const updatePassword = (data, id, callBack) => {
+  db.query(
+    `UPDATE users SET password = ? WHERE id = ?`,
+    [data.password, id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+};
+
 export const deleteUser = (data, callBack) => {
   db.query(
     `DELETE FROM users WHERE users.id=?`,

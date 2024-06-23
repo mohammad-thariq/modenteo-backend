@@ -3,8 +3,8 @@ import { getSlugwithName } from "../../utils/getSlugforAll.js";
 
 export const create = (data, callBack) => {
   db.query(
-    `INSERT INTO pages (title, content, status, slug) VALUES (?, ?, ?, ?)`,
-    [data.title, data.content, data.status, getSlugwithName(data.title)],
+    `INSERT INTO pages (title, content, page_type, status, slug) VALUES (?, ?, ?, ?, ?)`,
+    [data.title, data.content, data?.page_type, data.status, getSlugwithName(data.title)],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -16,7 +16,7 @@ export const create = (data, callBack) => {
 
 export const getByPagesId = (id, callBack) => {
   db.query(
-    `SELECT id, title, content, status, slug FROM pages WHERE id = ?`,
+    `SELECT id, title, content,page_type, status, slug FROM pages WHERE id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -29,7 +29,7 @@ export const getByPagesId = (id, callBack) => {
 
 export const getByPagesSlug = (id, callBack) => {
   db.query(
-    `SELECT id, title, content, status, slug FROM pages WHERE content = ?`,
+    `SELECT id, title, content,page_type, status, slug FROM pages WHERE slug = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -42,7 +42,7 @@ export const getByPagesSlug = (id, callBack) => {
 
 export const getPages = (data, callBack) => {
   db.query(
-    `SELECT id, title, content, status, slug FROM pages LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT id, title, content,page_type, status, slug FROM pages LIMIT ${data.limit} OFFSET ${data.offset}`,
     [],
     (error, results) => {
       if (error) {
@@ -55,8 +55,8 @@ export const getPages = (data, callBack) => {
 
 export const updatePage = (data, id, callBack) => {
   db.query(
-    `UPDATE pages SET title = ?, content = ?, status = ?, slug = ? WHERE id = ?`,
-    [data.title, data.content,data.status, getSlugwithName(data.title), , id],
+    `UPDATE pages SET title = ?, content = ?, page_type = ?, status = ?, slug = ? WHERE id = ?`,
+    [data.title, data.content, data?.page_typedata.status, getSlugwithName(data.title), , id],
     (error, results) => {
       if (error) {
         return callBack(error);

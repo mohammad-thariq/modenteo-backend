@@ -4,6 +4,7 @@ export const userNotificationMessage = {
     login: "login successfully",
     update: "user updated successfully",
     delete: "user deleted successfully",
+    passwordchange : "Password Changed Successfully",
   },
   error: {
     login: "invalid email or password",
@@ -11,5 +12,9 @@ export const userNotificationMessage = {
       type: "invalid type value. Must be one of:",
       email: "email is already taken",
     },
+    passwordchangefailed : "Failed to change password",
+    forgotpassword:{
+      email :"Invalid Email"
+    }
   },
 };

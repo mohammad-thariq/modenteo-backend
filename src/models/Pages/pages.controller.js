@@ -1,13 +1,11 @@
 import { tableNames } from "../../database/tables/index.js";
-import { getUploadFile } from "../../middleware/fileUpload/uploadfiles.js";
 import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
 import { getPaginated } from "../../middleware/pagination/paginated.js";
-import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import {
   create,
   deletePage,
   getByPagesId,
-  getPages,
+  getPages, getByPagesSlug,
   updatePage,
 } from "./pages.service.js";
 
@@ -31,6 +29,29 @@ export const createPages = (req, res) => {
 export const getPagesById = (req, res) => {
   const id = req.params.id;
   getByPagesId(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        success: 0,
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      success: 1,
+      data: results,
+    });
+  });
+};
+
+export const getPagesBySlug = (req, res) => {
+  const slug = req.params.slug;
+  getByPagesSlug(slug, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({

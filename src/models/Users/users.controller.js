@@ -16,6 +16,7 @@ import {
   getTotalProducts,
   getTotalSales,
   getTodayOrders,
+  updatePassword
 } from "./users.service.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -45,9 +46,8 @@ export const createUser = (req, res) => {
 
   if (!validateType.includes(body.type)) {
     return res.status(404).json({
-      error: `${
-        userNotificationMessage.error.register.type
-      } ${validateType?.join(", ")}`,
+      error: `${userNotificationMessage.error.register.type
+        } ${validateType?.join(", ")}`,
     });
   }
 
@@ -65,14 +65,39 @@ export const createUser = (req, res) => {
   });
 };
 
+export const changPassword = (req, res) => {
+  const body = req.body;
+  const salt = genSaltSync(10);
+  body.password = hashSync(body.password, salt);
+
+  getUserByUserEmail(body.email, async (err, results) => {
+    if (results) {
+      updatePassword(body, results?.id, (err, results) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            error: userNotificationMessage.error.passwordchangefailed,
+          });
+        }
+        return res.status(200).json({
+          message: userNotificationMessage.success.passwordchange,
+        });
+      });
+    } else {
+      return await res.status(404).json({
+        error: userNotificationMessage.error.forgotpassword.email,
+      });
+    }
+  });
+};
+
 export const login = (req, res) => {
   const body = req.body;
 
   if (!validateType.includes(body.type)) {
     return res.status(404).json({
-      error: `${
-        userNotificationMessage.error.register.type
-      } ${validateType?.join(", ")}`,
+      error: `${userNotificationMessage.error.register.type
+        } ${validateType?.join(", ")}`,
     });
   }
 
@@ -218,9 +243,8 @@ export const updateUsers = (req, res) => {
 
   if (!validateType.includes(body.type)) {
     return res.status(404).json({
-      error: `${
-        userNotificationMessage.error.register.type
-      } ${validateType?.join(", ")}`,
+      error: `${userNotificationMessage.error.register.type
+        } ${validateType?.join(", ")}`,
     });
   }
 
