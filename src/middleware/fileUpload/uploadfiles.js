@@ -1,6 +1,7 @@
 import AWS from "aws-sdk";
 import fs from "fs";
 import DataBaseEnvironmentConfig from "../../config/database.config.js";
+import { exit } from "process";
 
 AWS.config.update({ region: "eu-north-1" });
 const s3 = new AWS.S3({
@@ -42,11 +43,9 @@ export const getUploadFile = (req, table_name, callBack) => {
         error: "Image missing",
       });
     }
+    console.log(base64Image,"base64Image");
     if (base64Image != undefined && base64Image.includes(process.env.BASEURL)) {
-      let baseUrl = process.env.BASEURL;
-      const modifiedUrl = base64Image.replace(baseUrl, "");
-
-      return callBack(null, modifiedUrl);
+      return callBack(null, base64Image);
     } else {
       return base64ToFileObject(base64Image, callBack);
     }
