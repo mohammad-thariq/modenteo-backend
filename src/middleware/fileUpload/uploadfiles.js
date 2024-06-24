@@ -36,6 +36,8 @@ export const getUploadFile = (req, table_name, callBack) => {
 
   let files = req.files;
   let body = req.body;
+  console.log(files,'files');
+  console.log(body,'body');
   if (!files || files.length === 0) {
     const base64Image = body.image;
     if (base64Image == undefined) {
