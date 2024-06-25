@@ -67,6 +67,20 @@ export const getByOrdersId = (id, callBack) => {
   );
 };
 
+export const getOrderItemDetails = (id, callBack) => {
+  db.query(
+    `SELECT * FROM orders_items  INNER JOIN products on products.id = orders_items.product_id WHERE order_id = ?`,
+    [id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results.length ? results : null);
+    }
+  );
+};
+
+
 export const getByUserId = (data, id, callBack) => {
   const query = `SELECT * FROM orders WHERE user_id = ? LIMIT ${data.limit} OFFSET ${data.offset}`;
 

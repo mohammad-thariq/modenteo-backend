@@ -12,7 +12,7 @@ import {
   getInProcessOrders,
   getDispatchedOrders,
   getDeclinedOrders,
-  getDeliveredOrders,
+  getDeliveredOrders, getOrderItemDetails,
 } from "./orders.service.js";
 import { create as createOrderItem } from "../OrderItems/orderItems.service.js";
 
@@ -45,7 +45,7 @@ export const createOrders = async (req, res) => {
             item.order_id = orderNumber;
             item.created_at = currentDatetime;
             item.updated_at = currentDatetime;
-            createOrderItem(item, (err, results) => {});
+            createOrderItem(item, (err, results) => { });
           })
         );
       } catch (error) {
@@ -93,6 +93,45 @@ export const getOrdersByUserID = (req, res) => {
           page: Number(query.page),
           limit: Number(query.limit),
         },
+      });
+    });
+  });
+};
+export const getOrderDetailsByID = (req, res) => {
+  const id = req.params.id;
+  getByOrdersId(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        success: 0,
+        message: "Record not found",
+      });
+    }
+    // Get Order Items
+    getOrderItemDetails(results?.order_id, (err, resultitems) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+      if (!resultitems) {
+        return res.status(404).json({
+          success: 0,
+          message: "Record not found",
+        });
+      }
+      return res.status(200).json({
+        success: 1,
+        orderItems: resultitems,
+        order: results
       });
     });
   });

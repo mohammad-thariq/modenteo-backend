@@ -1,5 +1,5 @@
 import express from "express";
-import {authenticateToken} from "../../middleware/auth/authMiddleWare.js";
+import { authenticateToken } from "../../middleware/auth/authMiddleWare.js";
 import {
   createOrders,
   deleteOrdersById,
@@ -9,7 +9,7 @@ import {
   getAllOrders,
   getAllPendingOrders,
   getAllProcessOrders,
-  getOrdersById,
+  getOrdersById, getOrderDetailsByID,
   getOrdersByUserID,
   updateOrdersById,
 } from "./orders.controller.js";
@@ -24,6 +24,7 @@ router.get("/dispatched-order", authenticateToken, getAllDispatchedOrders);
 router.get("/delivered-order", authenticateToken, getAllDeliveredOrders);
 router.get("/declined-order", authenticateToken, getAllDeclinedOrders);
 router.get("/orders/:id", authenticateToken, getOrdersById);
+router.get("/order-details/:id", authenticateToken, getOrderDetailsByID);
 router.get("/orders/user/:id", authenticateToken, getOrdersByUserID);
 router.patch("/orders/update/:id", authenticateToken, updateOrdersById);
 router.delete("/orders/delete/:id", authenticateToken, deleteOrdersById);
