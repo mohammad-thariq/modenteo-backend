@@ -89,7 +89,7 @@ export const getByOrdersUserId = (id, callBack) => {
 
 export const getPendingOrders = (data, callBack) => {
   db.query(
-    `SELECT * FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT orders.id, orders.order_id, orders.user_id, orders.billing_id,shipping_id, orders.payment_status, orders.order_status, orders.ordered_date, orders.order_completed_date, orders.order_cancelled_date, orders.order_delivered_date, orders.total_amount, orders.shipping_method, orders.shipping_cost, orders.discount_amount, orders.mode_of_payment, orders.transection_id, orders.payment_approval_date, users.id as userID, users.first_name  FROM orders INNER JOIN users on users.id = orders.user_id WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
     [0],
     (error, results) => {
       if (error) {
@@ -102,7 +102,7 @@ export const getPendingOrders = (data, callBack) => {
 
 export const getInProcessOrders = (data, callBack) => {
   db.query(
-    `SELECT * FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT orders.id, orders.order_id, orders.user_id, orders.billing_id,shipping_id, orders.payment_status, orders.order_status, orders.ordered_date, orders.order_completed_date, orders.order_cancelled_date, orders.order_delivered_date, orders.total_amount, orders.shipping_method, orders.shipping_cost, orders.discount_amount, orders.mode_of_payment, orders.transection_id, orders.payment_approval_date, users.id as userID, users.first_name  FROM orders INNER JOIN users on users.id = orders.user_id WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
     [1],
     (error, results) => {
       if (error) {
@@ -115,7 +115,7 @@ export const getInProcessOrders = (data, callBack) => {
 
 export const getDispatchedOrders = (data, callBack) => {
   db.query(
-    `SELECT * FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT orders.id, orders.order_id, orders.user_id, orders.billing_id,shipping_id, orders.payment_status, orders.order_status, orders.ordered_date, orders.order_completed_date, orders.order_cancelled_date, orders.order_delivered_date, orders.total_amount, orders.shipping_method, orders.shipping_cost, orders.discount_amount, orders.mode_of_payment, orders.transection_id, orders.payment_approval_date, users.id as userID, users.first_name  FROM orders INNER JOIN users on users.id = orders.user_id WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
     [2],
     (error, results) => {
       if (error) {
@@ -128,7 +128,7 @@ export const getDispatchedOrders = (data, callBack) => {
 
 export const getDeliveredOrders = (data, callBack) => {
   db.query(
-    `SELECT * FROM orders WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT orders.id, orders.order_id, orders.user_id, orders.billing_id,shipping_id, orders.payment_status, orders.order_status, orders.ordered_date, orders.order_completed_date, orders.order_cancelled_date, orders.order_delivered_date, orders.total_amount, orders.shipping_method, orders.shipping_cost, orders.discount_amount, orders.mode_of_payment, orders.transection_id, orders.payment_approval_date, users.id as userID, users.first_name  FROM orders INNER JOIN users on users.id = orders.user_id WHERE order_status = ? LIMIT ${data.limit} OFFSET ${data.offset}`,
     [3],
     (error, results) => {
       if (error) {
@@ -141,7 +141,7 @@ export const getDeliveredOrders = (data, callBack) => {
 
 export const getDeclinedOrders = (data, callBack) => {
   db.query(
-    `SELECT * FROM orders WHERE order_status= ? LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT orders.id, orders.order_id, orders.user_id, orders.billing_id,shipping_id, orders.payment_status, orders.order_status, orders.ordered_date, orders.order_completed_date, orders.order_cancelled_date, orders.order_delivered_date, orders.total_amount, orders.shipping_method, orders.shipping_cost, orders.discount_amount, orders.mode_of_payment, orders.transection_id, orders.payment_approval_date, users.id as userID, users.first_name  FROM orders INNER JOIN users on users.id = orders.user_id WHERE order_status= ? LIMIT ${data.limit} OFFSET ${data.offset}`,
     [4],
     (error, results) => {
       if (error) {
@@ -154,7 +154,7 @@ export const getDeclinedOrders = (data, callBack) => {
 
 export const getOrders = (data, callBack) => {
   db.query(
-    `SELECT * FROM orders LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT orders.id, orders.order_id, orders.user_id, orders.billing_id,shipping_id, orders.payment_status, orders.order_status, orders.ordered_date, orders.order_completed_date, orders.order_cancelled_date, orders.order_delivered_date, orders.total_amount, orders.shipping_method, orders.shipping_cost, orders.discount_amount, orders.mode_of_payment, orders.transection_id, orders.payment_approval_date, users.id as userID, users.first_name  FROM orders INNER JOIN users on users.id = orders.user_id LIMIT ${data.limit} OFFSET ${data.offset}`,
     [],
     (error, results) => {
       if (error) {
