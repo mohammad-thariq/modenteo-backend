@@ -4,13 +4,14 @@ export const createhomesettings = (data, callBack) => {
   const promises = data.map(element => {
     return new Promise((resolve, reject) => {
       db.query(
-        `INSERT INTO home_settings (after_section, type, value, title, description) VALUES (?, ?, ?, ?, ?)`,
+        `INSERT INTO home_settings (after_section, type, value, title, description, view_more) VALUES (?, ?, ?, ?, ?, ?)`,
         [
           element.section || element.after_section,
           element.type,
           element.value,
           element.title,
           element.description,
+          element.view_more,
         ],
         (error, results) => {
           if (error) {
