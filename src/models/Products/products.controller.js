@@ -19,6 +19,8 @@ import {
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import { getBySubCategorySlug } from "../SubCategories/subCategories.service.js";
 import { getByCategorySlug } from "../Categories/categories.service.js";
+
+
 export const createProducts = (req, res) => {
   const body = req.body;
   const galleryUrls = req.body["gallery[]"];
@@ -58,6 +60,7 @@ export const createProducts = (req, res) => {
 export const getProductsBySubCategory = (req, res) => {
   const cat = req.params.cat;
   const subcat = req.params.subcat;
+  const filters = req.body;
   getByCategorySlug(cat, (err, results) => {
     if (err) {
       console.log(err);
@@ -82,7 +85,7 @@ export const getProductsBySubCategory = (req, res) => {
           error: "Record not found",
         });
       }
-      getByProductsSubcatId(results?.id, (err, results) => {
+      getByProductsSubcatId(results?.id, filters, (err, results) => {
         if (err) {
           console.log(err);
           return res.status(500).json({
@@ -124,6 +127,8 @@ export const getNewCollectionProduct = (req, res) => {
     });
   });
 };
+
+
 export const getSeasonCollectionProduct = (req, res) => {
   const id = req.params.id;
   getByProductsId(id, (err, results) => {
@@ -146,6 +151,7 @@ export const getSeasonCollectionProduct = (req, res) => {
 
 export const getCollectionProducts = (req, res) => {
   const id = req.params.type;
+  const filters = req.body
   let type = "";
   switch (id) {
     case "new-arrivals":
@@ -176,7 +182,7 @@ export const getCollectionProducts = (req, res) => {
           error: "Record not found",
         });
       }
-      getByProductsbyCollectionID(results?.id, (err, results) => {
+      getByProductsbyCollectionID(results?.id, filters, (err, results) => {
         if (err) {
           console.log(err);
           return res.status(500).json({
@@ -194,7 +200,7 @@ export const getCollectionProducts = (req, res) => {
       });
     });
   } else {
-    getByProductsbyCollection(type, (err, results) => {
+    getByProductsbyCollection(type, filters, (err, results) => {
       if (err) {
         console.log(err);
         return res.status(500).json({
@@ -215,6 +221,7 @@ export const getCollectionProducts = (req, res) => {
 
 export const getProductsByCat = (req, res) => {
   const id = req.params.cat;
+  const filters = req.body;
   getByCategorySlug(id, (err, results) => {
     if (err) {
       console.log(err);
@@ -227,7 +234,7 @@ export const getProductsByCat = (req, res) => {
         error: "Record not found",
       });
     }
-    getByProductsbyCategoryID(results?.id, (err, results) => {
+    getByProductsbyCategoryID(results?.id, filters, (err, results) => {
       if (err) {
         console.log(err);
         return res.status(500).json({
@@ -288,7 +295,7 @@ export const getProductsById = (req, res) => {
 
 export const getProductsBySubCat = (req, res) => {
   const id = req.params.subcatid;
-  getByProductsSubcatId(id, (err, results) => {
+  getByProductsSubcatId(id, null, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -308,7 +315,8 @@ export const getProductsBySubCat = (req, res) => {
 
 export const getProductsByCollection = (req, res) => {
   const id = req.params.id;
-  getByProductsbyCollectionID(id, (err, results) => {
+  const filters = req.body;
+  getByProductsbyCollectionID(id, filters, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
