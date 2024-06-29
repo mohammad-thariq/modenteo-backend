@@ -111,6 +111,15 @@ export const getByProductsbyCollection = (id, filters, callBack) => {
       }
     });
   }
+
+  if (filters?.price && filters?.price?.length > 0) {
+    filters?.price.forEach(priceRange => {
+      const minPrice = priceRange?.value?.min;
+      const maxPrice = priceRange?.value?.max;
+      query += ' AND ((offer_price IS NOT NULL AND offer_price BETWEEN ? AND ?) OR (offer_price IS NULL AND price BETWEEN ? AND ?))';
+      queryParams.push(minPrice, maxPrice, minPrice, maxPrice);
+    });
+  }
   
   db?.query(query, queryParams, (error, results) => {
     if (error) {
@@ -165,6 +174,15 @@ export const getByProductsbyCollectionID = (id, filters, callBack) => {
       } else if (catalog?.value === 'best products') {
         query += ' AND best_product = 1';
       }
+    });
+  }
+
+  if (filters?.price && filters?.price?.length > 0) {
+    filters?.price.forEach(priceRange => {
+      const minPrice = priceRange?.value?.min;
+      const maxPrice = priceRange?.value?.max;
+      query += ' AND ((offer_price IS NOT NULL AND offer_price BETWEEN ? AND ?) OR (offer_price IS NULL AND price BETWEEN ? AND ?))';
+      queryParams.push(minPrice, maxPrice, minPrice, maxPrice);
     });
   }
   
@@ -236,6 +254,15 @@ export const getByProductsbyCategoryID = (id, filters, callBack) => {
     });
   }
 
+  if (filters?.price && filters?.price?.length > 0) {
+    filters?.price.forEach(priceRange => {
+      const minPrice = priceRange?.value?.min;
+      const maxPrice = priceRange?.value?.max;
+      query += ' AND ((offer_price IS NOT NULL AND offer_price BETWEEN ? AND ?) OR (offer_price IS NULL AND price BETWEEN ? AND ?))';
+      queryParams.push(minPrice, maxPrice, minPrice, maxPrice);
+    });
+  }
+
   db.query(query, queryParams, (error, results) => {
     if (error) {
       return callBack(error);
@@ -271,6 +298,15 @@ export const getByProductsSubcatId = (id, filters,  callBack) => {
       } else if (catalog?.value === 'best products') {
         query += ' AND best_product = 1';
       }
+    });
+  }
+
+  if (filters?.price && filters?.price?.length > 0) {
+    filters?.price.forEach(priceRange => {
+      const minPrice = priceRange?.value?.min;
+      const maxPrice = priceRange?.value?.max;
+      query += ' AND ((offer_price IS NOT NULL AND offer_price BETWEEN ? AND ?) OR (offer_price IS NULL AND price BETWEEN ? AND ?))';
+      queryParams.push(minPrice, maxPrice, minPrice, maxPrice);
     });
   }
 
