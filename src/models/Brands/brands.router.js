@@ -14,6 +14,7 @@ const router = express.Router();
 router.post("/brands/create", authenticateToken, createBrands);
 router.get("/brands", authenticateToken, getAllBrands);
 router.get("/brands/:id", authenticateToken, getBrandsById);
+router.get("/brands/unauth/:id", getBrandsById);
 router.get("/list/brands", authenticateToken, getBrandByStatus);
 router.get("/filter/brands", getBrandByStatus);
 router.patch("/brands/update/:id", authenticateToken, updateBrandsById);
