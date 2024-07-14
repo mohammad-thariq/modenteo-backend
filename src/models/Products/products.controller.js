@@ -14,7 +14,7 @@ import {
   updateProducts,
   getByProductsSubcatId,
   getByProductsbyCategoryID,
-  getByProductsbyBrandID,
+  getByProductsbyBrandID, getVariantsbyProductID, createVariant, updateVariant, deleteVariant
 } from "./products.service.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import { getBySubCategorySlug } from "../SubCategories/subCategories.service.js";
@@ -24,7 +24,15 @@ import { getByCategorySlug } from "../Categories/categories.service.js";
 export const createProducts = (req, res) => {
   const body = req.body;
   const galleryUrls = req.body["gallery[]"];
-  body.gallery = galleryUrls?.join();
+  console.log(galleryUrls, 'galleryUrls');
+  if (galleryUrls) {
+    // Ensure galleryUrls is an array
+    const galleryArray = Array.isArray(galleryUrls) ? galleryUrls : [galleryUrls];
+    body.gallery = galleryArray.join();
+  } else {
+    body.gallery = '';
+  }
+
   getValidateByName(
     body.name,
     tableNames.PRODUCTS,
@@ -40,17 +48,65 @@ export const createProducts = (req, res) => {
             return res.status(400).json(err);
           }
           body.image = result;
-          create(body, (err, results) => {
+          create(body, async (err, results) => {
             if (err) {
               console.log(err);
               return res.status(500).json({
                 message: "Database connection error",
               });
             }
-            return res.status(200).json({
-              products: results,
-            });
+            let productID = results.insertId;
+
+            // Create Product Variants
+            try {
+              let product_details = [];
+              // Collect product details from the request body
+              for (let i = 0; body[`product_details[${i}][product_quantity]`]; i++) {
+                const productDetail = {
+                  product_quantity: body[`product_details[${i}][product_quantity]`],
+                  product_price: body[`product_details[${i}][product_price]`],
+                  offer_price: body[`product_details[${i}][offer_price]`],
+                  product_size: body[`product_details[${i}][product_size]`],
+                };
+                product_details.push(productDetail);
+              }
+
+              // Process each product detail
+              await Promise.all(
+                product_details.map(async (item) => {
+                  const data = {
+                    product_id: productID,
+                    product_size: item.product_size,
+                    product_quantity: item.product_quantity,
+                    product_price: item.product_price,
+                    offer_price: item.offer_price,
+                  };
+                  return new Promise((resolve, reject) => {
+                    createVariant(data, (err, results) => {
+                      if (err) {
+                        reject(err);
+                      } else {
+                        resolve(results);
+                      }
+                    });
+                  });
+                })
+              );
+
+              // Successfully created the product and variants
+              return res.status(200).json({
+                success: 1,
+                data: "Product Created Successfully",
+              });
+
+            } catch (error) {
+              return res.status(500).json({
+                success: 0,
+                error: error.message,
+              });
+            }
           });
+
         });
       }
     }
@@ -468,6 +524,94 @@ export const deleteProductsById = (req, res) => {
     }
     return res.status(200).json({
       message: "Child categories deleted successfully",
+    });
+  });
+};
+
+
+// Variants 
+
+export const getVariants = (req, res) => {
+  const productID = req.params.productID;
+  getVariantsbyProductID(productID, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        message: "Record not found",
+      });
+    }
+    getByProductsId(productID, (err, productdetails) => {
+      return res.status(200).json({
+        variants: results,
+        products: productdetails,
+      });
+    });
+
+  });
+}
+
+export const createVariants = (req, res) => {
+  const body = req.body;
+  createVariant(body, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+    return res.status(200).json({
+      success: 1,
+      data: results,
+    });
+  });
+};
+
+
+export const updateVariants = (req, res) => {
+  const params = req.params;
+  const body = req.body;
+  console.log(params, "params");
+  updateVariant(body, params.id, (err, results) => {
+    console.log(results, "results");
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+    return res.status(200).json({
+      success: 1,
+      message: "Updated successfully",
+    });
+  });
+};
+
+export const deleteVariants = (req, res) => {
+  const data = req.params;
+  deleteVariant(data, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+    if (!results.affectedRows) {
+      return res.status(404).json({
+        success: 0,
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      success: 1,
+      message: "Variant deleted successfully",
     });
   });
 };

@@ -15,7 +15,7 @@ import {
   getProductsBySubCat,
   getProductsByBrand,
   getProductsByCollection,
-  getProductsByMainCategory,
+  getProductsByMainCategory, getVariants, createVariants, updateVariants, deleteVariants
 } from "./products.controller.js";
 
 const router = express.Router();
@@ -34,5 +34,10 @@ router.get("/list/products", getProductsByStatus);
 router.patch("/products/update/:id", authenticateToken, updateProductsById);
 router.delete("/products/delete/:id", authenticateToken, deleteProductsById);
 router.post("/products/:cat/:subcat", getProductsBySubCategory);
+// Variants
+router.get("/variants/:productID", getVariants);
+router.post("/variants/create", createVariants);
+router.patch("/variants/update/:id", updateVariants);
+router.delete("/variants/delete/:id", deleteVariants);
 
 export default router;
