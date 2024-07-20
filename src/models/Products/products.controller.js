@@ -14,7 +14,7 @@ import {
   updateProducts,
   getByProductsSubcatId,
   getByProductsbyCategoryID,
-  getByProductsbyBrandID, getVariantsbyProductID, createVariant, updateVariant, deleteVariant
+  getByProductsbyBrandID, getVariantsbyProductID, createVariant, updateVariant, deleteVariant, getVariantSize, createVariantSize, updateVariantSize, deleteVariantSize
 } from "./products.service.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import { getBySubCategorySlug } from "../SubCategories/subCategories.service.js";
@@ -96,7 +96,7 @@ export const createProducts = (req, res) => {
               // Successfully created the product and variants
               return res.status(200).json({
                 success: 1,
-                data: "Product Created Successfully",
+                message: "Product Created Successfully",
               });
 
             } catch (error) {
@@ -596,6 +596,89 @@ export const updateVariants = (req, res) => {
 export const deleteVariants = (req, res) => {
   const data = req.params;
   deleteVariant(data, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+    if (!results.affectedRows) {
+      return res.status(404).json({
+        success: 0,
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      success: 1,
+      message: "Variant deleted successfully",
+    });
+  });
+};
+
+// Variant Sizes
+
+export const getVariantSizes = (req, res) => {
+  getVariantSize((err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      variants: results,
+    });
+
+  });
+}
+
+export const createVariantSizes = (req, res) => {
+  const body = req.body;
+  createVariantSize(body, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+    return res.status(200).json({
+      success: 1,
+      data: results,
+    });
+  });
+};
+
+
+export const updateVariantSizes = (req, res) => {
+  const params = req.params;
+  const body = req.body;
+  console.log(params, "params");
+  updateVariantSize(body, params.id, (err, results) => {
+    console.log(results, "results");
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+    return res.status(200).json({
+      success: 1,
+      message: "Updated successfully",
+    });
+  });
+};
+
+export const deleteVariantSizes = (req, res) => {
+  const data = req.params;
+  deleteVariantSize(data, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({

@@ -2,7 +2,7 @@ import db from "../../../database/index.js";
 
 export const create = (data, callBack) => {
   db.query(
-    `INSERT INTO fashion_products (page_url, status, image) VALUES (?, ?, ?)`,
+    `INSERT INTO fashion_products (page_url, status, image,cat_type) VALUES (?, ?, ?,?)`,
     [data.page_url, data.status, data.image],
     (error, results) => {
       if (error) {
@@ -15,7 +15,7 @@ export const create = (data, callBack) => {
 
 export const getByFashionId = (id, callBack) => {
   db.query(
-    `SELECT id, page_url, status, image from fashion_products WHERE id = ?`,
+    `SELECT id, page_url, status, image,cat_type from fashion_products WHERE id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -28,7 +28,7 @@ export const getByFashionId = (id, callBack) => {
 
 export const getFashion = (callBack) => {
   db.query(
-    `SELECT id, page_url, status, image FROM fashion_products`,
+    `SELECT id, page_url, status,cat_type, image FROM fashion_products`,
     [],
     (error, results) => {
       if (error) {
@@ -41,8 +41,8 @@ export const getFashion = (callBack) => {
 
 export const updateFashion = (data, id, callBack) => {
   db.query(
-    `UPDATE fashion_products SET page_url = ?, status = ?, image = ? WHERE id = ?`,
-    [data.page_url, data.status, data.image, id],
+    `UPDATE fashion_products SET page_url = ?, status = ?, image = ?, cat_type= ? WHERE id = ?`,
+    [data.page_url, data.status, data.image,data.cat_type, id],
 
     (error, results) => {
       if (error) {

@@ -3,7 +3,7 @@ import { getSlugwithName } from "../../utils/getSlugforAll.js";
 
 export const create = (data, callBack) => {
   db.query(
-    `INSERT INTO products (image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, featured_product,best_product,gallery) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?,?)`,
+    `INSERT INTO products (image, short_name, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,color, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, featured_product,best_product,gallery) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?,?,?)`,
     [
       data?.image,
       data?.short_name,
@@ -14,6 +14,7 @@ export const create = (data, callBack) => {
       data.collection,
       data.brand,
       data.sku,
+      data.color,
       data.short_description,
       data.long_description,
       data.status,
@@ -36,7 +37,7 @@ export const create = (data, callBack) => {
 
 export const getByProductsId = (id, callBack) => {
   db.query(
-    `SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE id = ?`,
+    `SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,color,short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -49,7 +50,7 @@ export const getByProductsId = (id, callBack) => {
 
 export const getByProductsSlug = (id, callBack) => {
   db.query(
-    `SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE slug = ?`,
+    `SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,color,short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE slug = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -61,7 +62,7 @@ export const getByProductsSlug = (id, callBack) => {
 };
 
 export const getByProductsbyCollection = (id, filters, callBack) => {
-  let query = 'SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE ' + id + ' = 1';
+  let query = 'SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,color, weight, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE ' + id + ' = 1';
   const queryParams = [id];
 
   if (filters?.brands && filters?.brands?.length > 0) {
@@ -126,7 +127,7 @@ export const getByProductsbyCollection = (id, filters, callBack) => {
 };
 
 export const getByProductsbyCollectionID = (id, filters, callBack) => {
-  let query = 'SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,  short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE collection_id = ' + id;
+  let query = 'SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, color, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE collection_id = ' + id;
   const queryParams = [id];
 
   if (filters?.brands && filters?.brands?.length > 0) {
@@ -191,7 +192,7 @@ export const getByProductsbyCollectionID = (id, filters, callBack) => {
 };
 
 export const getByProductsbyBrandID = (id, callBack) => {
-  let executeQuery = 'SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,  short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE brand_id = ' + id;
+  let executeQuery = 'SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, color, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE brand_id = ' + id;
   db.query(executeQuery,
     (error, results) => {
       if (error) {
@@ -203,7 +204,7 @@ export const getByProductsbyBrandID = (id, callBack) => {
 };
 
 export const getByProductsbyCategoryID = (id, filters, callBack) => {
-  let query = 'SELECT id, image, short_name, gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, featured_product, best_product FROM products WHERE category_id = ?';
+  let query = 'SELECT id, image, short_name, gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,color,short_description, long_description, status, seo_title, seo_description, top_product, new_arrival, featured_product, best_product FROM products WHERE category_id = ?';
   const queryParams = [id];
 
   if (filters?.brands && filters?.brands?.length > 0) {
@@ -268,7 +269,7 @@ export const getByProductsbyCategoryID = (id, filters, callBack) => {
 };
 
 export const getByProductsSubcatId = (id, filters, callBack) => {
-  let query = 'SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,  short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE sub_category_id = ?';
+  let query = 'SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,color,  short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products WHERE sub_category_id = ?';
   const queryParams = [id];
 
   if (filters?.brands && filters?.brands?.length > 0) {
@@ -317,7 +318,7 @@ export const getByProductsSubcatId = (id, filters, callBack) => {
 
 export const getProducts = (data, callBack) => {
   db.query(
-    `SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products LIMIT ${data.limit} OFFSET ${data.offset}`,
+    `SELECT id, image, short_name,gallery, name, slug, category_id, sub_category_id, collection_id, brand_id, sku,color, short_description, long_description, status, seo_title, seo_description, top_product, new_arrival,featured_product, best_product FROM products LIMIT ${data.limit} OFFSET ${data.offset}`,
     [],
     (error, results) => {
       if (error) {
@@ -330,7 +331,7 @@ export const getProducts = (data, callBack) => {
 
 export const updateProducts = (data, id, callBack) => {
   db.query(
-    `UPDATE products SET image = ?, short_name = ?, name = ?, slug = ?, category_id = ?, sub_category_id = ?, collection_id = ?, brand_id = ?, sku = ?, short_description = ?, long_description = ?, status = ?, seo_title = ?, seo_description = ?, top_product = ?, new_arrival = ?,featured_product =?, best_product = ?, gallery= ? WHERE id = ?`,
+    `UPDATE products SET image = ?, short_name = ?, name = ?, slug = ?, category_id = ?, sub_category_id = ?, collection_id = ?, brand_id = ?, sku = ?,  color = ?, short_description = ?, long_description = ?, status = ?, seo_title = ?, seo_description = ?, top_product = ?, new_arrival = ?,featured_product =?, best_product = ?, gallery= ? WHERE id = ?`,
     [
       data?.image,
       data?.short_name,
@@ -341,6 +342,7 @@ export const updateProducts = (data, id, callBack) => {
       data.collection,
       data.brand,
       data.sku,
+      data.color,
       data.short_description,
       data.long_description,
       data.status,
@@ -432,6 +434,68 @@ export const updateVariant = (data, id, callBack) => {
 export const deleteVariant = (data, callBack) => {
   db.query(
     `DELETE FROM product_variants WHERE product_variants.id=?`,
+    [data.id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+};
+
+
+// Variant Size
+export const getVariantSize = (callBack) => {
+  db.query(
+    `SELECT id, name, status FROM variant_size`,
+    [],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results.length ? results : null);
+    }
+  );
+}
+
+
+export const createVariantSize = (data, callBack) => {
+  db.query(
+    `INSERT INTO variant_size (name, status) VALUES (?, ?)`,
+    [
+      data.name,
+      data.status,
+    ],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+}
+
+export const updateVariantSize = (data, id, callBack) => {
+  db.query(
+    `UPDATE variant_size SET name = ?, status = ? WHERE id = ?`,
+    [
+      data?.name,
+      data?.status,
+      id,
+    ],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results);
+    }
+  );
+};
+
+export const deleteVariantSize = (data, callBack) => {
+  db.query(
+    `DELETE FROM variant_size WHERE variant_size.id=?`,
     [data.id],
     (error, results) => {
       if (error) {

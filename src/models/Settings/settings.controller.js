@@ -7,10 +7,12 @@ import {
   gethomesettings,
 } from "./settings.service.js";
 import { tableNames } from "../../database/tables/index.js";
-import { getDataByStatus } from "../../middleware/getDataByStatus/index.js";
+import { getDataByCategoryType } from "../../middleware/getDataByStatus/index.js";
+
+// Website Settings
 export const createSettings = (req, res) => {
   const body = req.body;
-  deletehomesettings((err, results) => {
+  deletehomesettings('website',(err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -18,7 +20,7 @@ export const createSettings = (req, res) => {
         message: "Database connection error",
       });
     }
-    deletesettings((err, results) => {
+    deletesettings('website',(err, results) => {
       if (err) {
         console.log(err);
         return res.status(500).json({
@@ -26,7 +28,7 @@ export const createSettings = (req, res) => {
           message: "Database connection error",
         });
       }
-      createhomesettings(body.home_settings, (err, results) => {
+      createhomesettings(body.home_settings, 'website', (err, results) => {
         if (err) {
           console.log(err);
           return res.status(500).json({
@@ -34,7 +36,7 @@ export const createSettings = (req, res) => {
             message: "Database connection error",
           });
         }
-        createsettings(body.section, (err, results) => {
+        createsettings(body.section, 'website', (err, results) => {
           if (err) {
             console.log(err);
             return res.status(500).json({
@@ -52,15 +54,16 @@ export const createSettings = (req, res) => {
   });
 
 };
+
 export const settings = (req, res) => {
-  getsetttings((err, settings) => {
+  getsetttings('website',(err, settings) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
         error: "Database connection error",
       });
     }
-    gethomesettings((err, results) => {
+    gethomesettings('website',(err, results) => {
       if (err) {
         console.log(err);
         return res.status(500).json({
@@ -73,25 +76,118 @@ export const settings = (req, res) => {
       });
     });
   });
-}
+};
+
 export const settingshome = async (req, res) => {
   try {
-    const servicecustomer = await getCustomerServiceByStatus();
-    const fashion = await getFashionByStatus();
-    const popular = await getPopularByStatus();
-    const discount = await getDiscountByStatus();
-    const spotlight = await getSpotlightByStatus();
-    const banner = await getHeroBannerByStatus();
+    const servicecustomer = await getCustomerServiceByStatus('website');
+    const fashion = await getFashionByStatus('website');
+    const popular = await getPopularByStatus('website');
+    const discount = await getDiscountByStatus('website');
+    const spotlight = await getSpotlightByStatus('website');
+    const banner = await getHeroBannerByStatus('website');
 
-    return res.status(200).json({ customerservice: servicecustomer, fashion: fashion, discount: discount, popular: popular, spotlight: spotlight, banner: banner});
+    return res.status(200).json({ customerservice: servicecustomer, fashion: fashion, discount: discount, popular: popular, spotlight: spotlight, banner: banner });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
   }
-}
-export const getCustomerServiceByStatus = () => {
+};
+
+// Category Settings
+export const createSettingsCategory = (req, res) => {
+  const type = req.params.type;
+  const body = req.body;
+  deletehomesettings(type,(err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+    deletesettings(type,(err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection error",
+        });
+      }
+      createhomesettings(body.home_settings, type, (err, results) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            success: 0,
+            message: "Database connection error",
+          });
+        }
+        createsettings(body.section, type, (err, results) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({
+              success: 0,
+              message: "Database connection error",
+            });
+          }
+          return res.status(200).json({
+            success: 1,
+            data: results,
+          });
+        });
+      });
+    });
+  });
+
+};
+
+export const settingscategory = (req, res) => {
+  const type = req.params.type;
+
+  getsetttings(type,(err, settings) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        error: "Database connection error",
+      });
+    }
+    gethomesettings(type,(err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          error: "Database connection error",
+        });
+      }
+      return res.status(200).json({
+        settings: settings,
+        home_settings: results
+      });
+    });
+  });
+};
+
+export const settingscategoryhome = async (req, res) => {
+  const type = req.params.type;
+
+  try {
+    const servicecustomer = await getCustomerServiceByStatus(type);
+    const fashion = await getFashionByStatus(type);
+    const popular = await getPopularByStatus(type);
+    const discount = await getDiscountByStatus(type);
+    const spotlight = await getSpotlightByStatus(type);
+    const banner = await getHeroBannerByStatus(type);
+
+    return res.status(200).json({ customerservice: servicecustomer, fashion: fashion, discount: discount, popular: popular, spotlight: spotlight, banner: banner });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+export const getCustomerServiceByStatus = (type) => {
   return new Promise((resolve, reject) => {
-    getDataByStatus(tableNames.MANAGEWEBSITE.CUSTOMERSERVICE, (err, results) => {
+    getDataByCategoryType(tableNames.MANAGEWEBSITE.CUSTOMERSERVICE, type, (err, results) => {
       if (err) {
         console.log(err);
         reject("Database connection error");
@@ -102,9 +198,9 @@ export const getCustomerServiceByStatus = () => {
   });
 }
 
-export const getFashionByStatus = () => {
+export const getFashionByStatus = (type) => {
   return new Promise((resolve, reject) => {
-    getDataByStatus(tableNames.MANAGEWEBSITE.FASHIONPRODUCTS, (err, results) => {
+    getDataByCategoryType(tableNames.MANAGEWEBSITE.FASHIONPRODUCTS, type, (err, results) => {
       if (err) {
         console.log(err);
         reject("Database connection error");
@@ -115,9 +211,9 @@ export const getFashionByStatus = () => {
   });
 }
 
-export const getPopularByStatus = () => {
+export const getPopularByStatus = (type) => {
   return new Promise((resolve, reject) => {
-    getDataByStatus(tableNames.MANAGEWEBSITE.POPULARPRODUCTS, (err, results) => {
+    getDataByCategoryType(tableNames.MANAGEWEBSITE.POPULARPRODUCTS, type, (err, results) => {
       if (err) {
         console.log(err);
         reject("Database connection error");
@@ -129,9 +225,9 @@ export const getPopularByStatus = () => {
 }
 
 
-export const getHeroBannerByStatus = () => {
+export const getHeroBannerByStatus = (type) => {
   return new Promise((resolve, reject) => {
-    getDataByStatus(tableNames.MANAGEWEBSITE.BANNER, (err, results) => {
+    getDataByCategoryType(tableNames.MANAGEWEBSITE.BANNER, type, (err, results) => {
       if (err) {
         console.log(err);
         reject("Database connection error");
@@ -142,9 +238,9 @@ export const getHeroBannerByStatus = () => {
   });
 }
 
-export const getSpotlightByStatus = () => {
+export const getSpotlightByStatus = (type) => {
   return new Promise((resolve, reject) => {
-    getDataByStatus(tableNames.MANAGEWEBSITE.SPOTLIGHT, (err, results) => {
+    getDataByCategoryType(tableNames.MANAGEWEBSITE.SPOTLIGHT, type, (err, results) => {
       if (err) {
         console.log(err);
         reject("Database connection error");
@@ -155,9 +251,9 @@ export const getSpotlightByStatus = () => {
   });
 }
 
-export const getDiscountByStatus = () => {
+export const getDiscountByStatus = (type) => {
   return new Promise((resolve, reject) => {
-    getDataByStatus(tableNames.MANAGEWEBSITE.DISCOUNTBANNER, (err, results) => {
+    getDataByCategoryType(tableNames.MANAGEWEBSITE.DISCOUNTBANNER, type, (err, results) => {
       if (err) {
         console.log(err);
         reject("Database connection error");

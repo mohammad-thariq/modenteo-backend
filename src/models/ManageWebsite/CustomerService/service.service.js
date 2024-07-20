@@ -2,7 +2,7 @@ import db from "../../../database/index.js";
 
 export const create = (data, callBack) => {
   db.query(
-    `INSERT INTO customer_service (badge, description, image,  status) VALUES (?, ?, ?, ?)`,
+    `INSERT INTO customer_service (badge, description, image,cat_type,  status) VALUES (?,?, ?, ?, ?)`,
     [data.badge, data.description, data.image, data.status],
     (error, results) => {
       if (error) {
@@ -15,7 +15,7 @@ export const create = (data, callBack) => {
 
 export const getByCustomerServiceId = (id, callBack) => {
   db.query(
-    `SELECT id, badge, description, image,  status from customer_service WHERE id = ?`,
+    `SELECT id, badge, description, image, cat_type, status from customer_service WHERE id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -28,7 +28,7 @@ export const getByCustomerServiceId = (id, callBack) => {
 
 export const getCustomerService = (callBack) => {
   db.query(
-    `SELECT id, badge, description, image,  status FROM customer_service`,
+    `SELECT id, badge, description, image, cat_type, status FROM customer_service`,
     [],
     (error, results) => {
       if (error) {
@@ -41,8 +41,8 @@ export const getCustomerService = (callBack) => {
 
 export const updateCustomerService = (data, id, callBack) => {
   db.query(
-    `UPDATE customer_service SET badge = ?, description = ?, image = ?,  status = ? WHERE id = ?`,
-    [data.badge, data.description, data.image, data.status, id],
+    `UPDATE customer_service SET badge = ?, description = ?, image = ?, cat_type=?, status = ? WHERE id = ?`,
+    [data.badge, data.description, data.image, data.cat_type, data.status, id],
 
     (error, results) => {
       if (error) {

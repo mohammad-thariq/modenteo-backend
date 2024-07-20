@@ -1,10 +1,10 @@
 import db from "../../database/index.js";
 
-export const createhomesettings = (data, callBack) => {
+export const createhomesettings = (data, type, callBack) => {
   const promises = data.map(element => {
     return new Promise((resolve, reject) => {
       db.query(
-        `INSERT INTO home_settings (after_section, type, value, title, description, view_more) VALUES (?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO home_settings (after_section, type, value, title, description, view_more, cat_type) VALUES (?, ?, ?, ?, ?, ?,?)`,
         [
           element.section || element.after_section,
           element.type,
@@ -12,6 +12,7 @@ export const createhomesettings = (data, callBack) => {
           element.title,
           element.description,
           element.view_more,
+          type
         ],
         (error, results) => {
           if (error) {
@@ -28,16 +29,17 @@ export const createhomesettings = (data, callBack) => {
     .catch(error => callBack(error));
 };
 
-export const createsettings = (data, callBack) => {
+export const createsettings = (data,type, callBack) => {
   const promises = data.map(element => {
     return new Promise((resolve, reject) => {
       db.query(
-        `INSERT INTO settings (type, enabled, title, description) VALUES (?, ?, ?, ?)`,
+        `INSERT INTO settings (type, enabled, title, description,cat_type) VALUES (?, ?, ?, ?,?)`,
         [
           element.type,
           element.enabled,
           element.title,
           element.description,
+          type
         ],
         (error, results) => {
           if (error) {
@@ -54,12 +56,10 @@ export const createsettings = (data, callBack) => {
     .catch(error => callBack(error));
 };
 
-
-
-export const gethomesettings = (callBack) => {
+export const gethomesettings = (type,callBack) => {
   db.query(
-    `SELECT * FROM home_settings`,
-    [],
+    `SELECT * FROM home_settings WHERE cat_type = ?`,
+    [type],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -70,10 +70,10 @@ export const gethomesettings = (callBack) => {
 };
 
 
-export const getsetttings = (callBack) => {
+export const getsetttings = (type,callBack) => {
   db.query(
-    `SELECT * FROM settings`,
-    [],
+    `SELECT * FROM settings WHERE cat_type = ?`,
+    [type],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -83,10 +83,10 @@ export const getsetttings = (callBack) => {
   );
 };
 
-export const deletehomesettings = (callBack) => {
+export const deletehomesettings = (type,callBack) => {
   db.query(
-    `DELETE FROM home_settings`,
-    [],
+    `DELETE FROM home_settings WHERE cat_type = ?`,
+    [type],
     (error, results) => {
       if (error) {
         return callBack(error);
@@ -96,10 +96,10 @@ export const deletehomesettings = (callBack) => {
   );
 };
 
-export const deletesettings = (callBack) => {
+export const deletesettings = (type,callBack) => {
   db.query(
-    `DELETE FROM settings`,
-    [],
+    `DELETE FROM settings WHERE cat_type = ?`,
+    [type],
     (error, results) => {
       if (error) {
         return callBack(error);

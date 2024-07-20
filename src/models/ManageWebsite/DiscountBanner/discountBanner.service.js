@@ -2,7 +2,7 @@ import db from "../../../database/index.js";
 
 export const create = (data, callBack) => {
   db.query(
-    `INSERT INTO discount_banner (title, sub_title, description, button_name, page_url, status, image) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO discount_banner (title, sub_title, description, button_name, page_url, status,cat_type, image) VALUES (?,?, ?, ?, ?, ?, ?, ?)`,
     [
       data.title,
       data.sub_title,
@@ -10,6 +10,7 @@ export const create = (data, callBack) => {
       data.button_name,
       data.page_url,
       data.status,
+      data.cat_type,
       data.image,
     ],
     (error, results) => {
@@ -23,7 +24,7 @@ export const create = (data, callBack) => {
 
 export const getByDiscountId = (id, callBack) => {
   db.query(
-    `SELECT id, title, sub_title, description, button_name, page_url, status, image from discount_banner WHERE id = ?`,
+    `SELECT id, title, sub_title, description, button_name, page_url, status,cat_type, image from discount_banner WHERE id = ?`,
     [id],
     (error, results) => {
       if (error) {
@@ -36,7 +37,7 @@ export const getByDiscountId = (id, callBack) => {
 
 export const getDiscount = (callBack) => {
   db.query(
-    `SELECT id, title, sub_title, description, button_name, page_url, status, image FROM discount_banner`,
+    `SELECT id, title, sub_title, description, button_name, page_url, status,cat_type, image FROM discount_banner`,
     [],
     (error, results) => {
       if (error) {
@@ -49,7 +50,7 @@ export const getDiscount = (callBack) => {
 
 export const updateDiscount = (data, id, callBack) => {
   db.query(
-    `UPDATE discount_banner SET title = ?, sub_title = ?, description = ?, button_name = ?, page_url = ?, status = ?, image = ? WHERE id = ?`,
+    `UPDATE discount_banner SET title = ?, sub_title = ?, description = ?, button_name = ?, page_url = ?, status = ?,cat_type=?, image = ? WHERE id = ?`,
     [
       data.title,
       data.sub_title,
@@ -57,6 +58,7 @@ export const updateDiscount = (data, id, callBack) => {
       data.button_name,
       data.page_url,
       data.status,
+      data.cat_type,
       data.image,
       id,
     ],
