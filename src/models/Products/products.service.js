@@ -411,6 +411,49 @@ export const createVariant = (data, callBack) => {
   );
 }
 
+
+export const createPrdVariant = (product_id, variant_products, callBack) => {
+  let resultsArray = [];
+  let errorsArray = [];
+
+  variant_products.forEach((variant_id, index) => {
+    db.query(
+      `SELECT * FROM variant_products WHERE product_id = ? AND variant_id = ?`,
+      [product_id, variant_id],
+      (selectError, selectResults) => {
+        if (selectError) {
+          errorsArray.push(selectError);
+          // If there's an error in the select query, call the callback with the error
+          if (index === variant_products.length - 1) {
+            return callBack(errorsArray);
+          }
+        } else if (selectResults.length === 0) {
+          // If no matching record is found, insert the new variant product
+          db.query(
+            `INSERT INTO variant_products (product_id, variant_id) VALUES (?, ?)`,
+            [product_id, variant_id],
+            (insertError, insertResults) => {
+              if (insertError) {
+                errorsArray.push(insertError);
+              } else {
+                resultsArray.push(insertResults);
+              }
+              // If this is the last item in the loop, call the callback with the results and errors
+              if (index === variant_products.length - 1) {
+                return callBack(errorsArray.length ? errorsArray : null, resultsArray);
+              }
+            }
+          );
+        } else {
+          // If a matching record is found, skip to the next iteration
+          if (index === variant_products.length - 1) {
+            return callBack(errorsArray.length ? errorsArray : null, resultsArray);
+          }
+        }
+      }
+    );
+  });
+};
 export const updateVariant = (data, id, callBack) => {
   db.query(
     `UPDATE product_variants SET product_id = ?, product_size = ?, product_quantity = ?, product_price = ?, offer_price = ? WHERE id = ?`,
@@ -446,6 +489,65 @@ export const deleteVariant = (data, callBack) => {
 
 
 // Variant Size
+export const getPrdVariantSize = (id, callBack) => {
+  db.query(
+    `SELECT * FROM product_variants WHERE product_id = ?`,
+    [id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results.length ? results : null);
+    }
+  );
+}
+
+// Product Variants
+
+export const getPrdVariants = (id, callBack) => {
+  const query = ` SELECT p.* FROM variant_products vp INNER JOIN products p ON vp.product_id = p.id WHERE vp.product_id = ? AND vp.variant_id != ? `;
+  db.query(
+    query,
+    [id,id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results.length ? results : null);
+    }
+  );
+}
+
+
+export const getProductList = (callBack) => {
+  db.query(
+    `SELECT * FROM products`,
+    [],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results.length ? results : null);
+    }
+  );
+}
+
+
+
+export const getProductVariant = (id,callBack) => {
+  db.query(
+    `SELECT * FROM variant_products WHERE product_id = ?`,
+    [id],
+    (error, results) => {
+      if (error) {
+        return callBack(error);
+      }
+      return callBack(null, results.length ? results : null);
+    }
+  );
+}
+
+
 export const getVariantSize = (callBack) => {
   db.query(
     `SELECT id, name, status FROM variant_size`,
@@ -475,6 +577,7 @@ export const createVariantSize = (data, callBack) => {
     }
   );
 }
+
 
 export const updateVariantSize = (data, id, callBack) => {
   db.query(

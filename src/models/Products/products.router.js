@@ -15,7 +15,7 @@ import {
   getProductsBySubCat,
   getProductsByBrand,
   getProductsByCollection,
-  getProductsByMainCategory, getVariants, createVariants, updateVariants, deleteVariants, getVariantSizes, createVariantSizes, deleteVariantSizes, updateVariantSizes
+  getProductsByMainCategory, getVariants, createVariants, createorUpdateVariants, updateVariants, deleteVariants, getVariantSizes,getProductVariants, getProductsList, createVariantSizes, deleteVariantSizes, updateVariantSizes
 } from "./products.controller.js";
 
 const router = express.Router();
@@ -34,6 +34,7 @@ router.get("/list/products", getProductsByStatus);
 router.patch("/products/update/:id", authenticateToken, updateProductsById);
 router.delete("/products/delete/:id", authenticateToken, deleteProductsById);
 router.post("/products/:cat/:subcat", getProductsBySubCategory);
+router.post("/products-variants/:id", createorUpdateVariants);
 
 // Variants
 router.get("/variants/:productID", getVariants);
@@ -41,6 +42,8 @@ router.post("/variants/create", createVariants);
 router.patch("/variants/update/:id", updateVariants);
 router.delete("/variants/delete/:id", deleteVariants);
 
+router.get("/products-list", getProductsList);
+router.get("/get-prd-variants/:prdid", getProductVariants);
 
 // Variant Sizes
 router.get("/variants-sizes", getVariantSizes);

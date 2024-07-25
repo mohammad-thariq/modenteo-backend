@@ -14,7 +14,7 @@ import {
   updateProducts,
   getByProductsSubcatId,
   getByProductsbyCategoryID,
-  getByProductsbyBrandID, getVariantsbyProductID, createVariant, updateVariant, deleteVariant, getVariantSize, createVariantSize, updateVariantSize, deleteVariantSize
+  getByProductsbyBrandID, getVariantsbyProductID, createVariant, createPrdVariant, updateVariant, deleteVariant, getProductVariant, getProductList, getVariantSize, createVariantSize, updateVariantSize, deleteVariantSize, getPrdVariantSize, getPrdVariants
 } from "./products.service.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import { getBySubCategorySlug } from "../SubCategories/subCategories.service.js";
@@ -323,8 +323,28 @@ export const getProductsBySlug = (req, res) => {
         message: "Record not found",
       });
     }
-    return res.status(200).json({
-      products: results,
+    // Get Product sizes 
+    getPrdVariantSize(results.id, (err, size) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          message: "Database connection error",
+        });
+      }
+      // Get Product sizes 
+      getPrdVariants(results.id, (err, variant) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            message: "Database connection error",
+          });
+        }
+        return res.status(200).json({
+          sizes: size,
+          products: results,
+          variants: variant
+        });
+      });
     });
   });
 };
@@ -571,6 +591,25 @@ export const createVariants = (req, res) => {
     });
   });
 };
+export const createorUpdateVariants = (req, res) => {
+  const body = req.body;
+  let product_id = body.product_id;
+  let variant_products = body.variant_products;
+
+  createPrdVariant(product_id, variant_products, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+    return res.status(200).json({
+      success: 1,
+      data: results,
+    });
+  });
+};
 
 
 export const updateVariants = (req, res) => {
@@ -616,6 +655,48 @@ export const deleteVariants = (req, res) => {
   });
 };
 
+export const getProductsList = (req, res) => {
+  getProductList((err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      products: results,
+    });
+
+  });
+}
+
+export const getProductVariants = (req, res) => {
+  const params = req.params;
+  getProductVariant(params.prdid, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Database connection error",
+      });
+    }
+    if (!results) {
+      return res.status(404).json({
+        message: "Record not found",
+      });
+    }
+    return res.status(200).json({
+      products: results,
+    });
+
+  });
+}
+
+
 // Variant Sizes
 
 export const getVariantSizes = (req, res) => {
@@ -637,6 +718,8 @@ export const getVariantSizes = (req, res) => {
 
   });
 }
+
+
 
 export const createVariantSizes = (req, res) => {
   const body = req.body;
