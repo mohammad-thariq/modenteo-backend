@@ -3,7 +3,7 @@ import { getSlugwithName } from "../../utils/getSlugforAll.js";
 
 export const create = (data, callBack) => {
   db.query(
-    `INSERT INTO cart (product_id, quantity,color,size, user_id) VALUES (?,,?,?, ?, ?)`,
+    `INSERT INTO cart (product_id, quantity,color,size, user_id) VALUES (?,?,?, ?, ?)`,
     [data.product_id, data.quantity, data.color, data.size, data.user_id],
     (error, results) => {
       if (error) {
