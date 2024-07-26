@@ -10,6 +10,6 @@ router.get("/settings-frontend", settingshome);
 
 // Category Settings
 router.post("/settings/:type/create", authenticateToken, createSettingsCategory);
-router.get("/settings/:type/", settingscategory);
+router.get("/settings/:type", settingscategory);
 router.get("/settings/:type/frontend", settingscategoryhome);
 export default router;
