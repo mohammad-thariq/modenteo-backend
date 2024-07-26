@@ -432,7 +432,7 @@ export const getProductsByBrand = (req, res) => {
 
 export const getProductsByMainCategory = (req, res) => {
   const id = req.params.id;
-  getByProductsbyCategoryID(id, (err, results) => {
+  getByProductsbyCategoryID(id,null, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
