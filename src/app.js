@@ -41,7 +41,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); 
+app.options('*', cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(fileUpload());
@@ -68,15 +68,7 @@ app.use(
   BannerRoutes,
   SpotLightRoutes,
   ServiceRoutes,
-  DiscountRoutes,
-  PopularProductsRoutes,
-  FashionProductsRoutes,
-  OrdersRoutes,
-  OrderItemsRoutes,
-  UserAddressRoutes,
-  SettingsRoutes,
-  PageRoutes
-);
+  DiscountRoutes, PopularProductsRoutes, FashionProductsRoutes, OrdersRoutes, OrderItemsRoutes, UserAddressRoutes, SettingsRoutes, PageRoutes);
 // app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
 app.get("/", (req, res) => {
@@ -89,10 +81,9 @@ app.listen(
     : ServerEnvironmentConfig.server.local,
   () => {
     console.log(
-      `Server started on port ${
-        ServerEnvironmentConfig.server.line === "production"
-          ? ServerEnvironmentConfig.server.live
-          : ServerEnvironmentConfig.server.local
+      `Server started on port ${ServerEnvironmentConfig.server.line === "production"
+        ? ServerEnvironmentConfig.server.live
+        : ServerEnvironmentConfig.server.local
       }`
     );
   }

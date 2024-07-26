@@ -411,56 +411,87 @@ export const createVariant = (data, callBack) => {
   );
 }
 
-
 export const createPrdVariant = (product_id, variant_products, callBack) => {
+  // Ensure the product_id is in the variant_products array
+  if (!variant_products.includes(product_id)) {
+    variant_products.push(product_id);
+  }
+
   let resultsArray = [];
   let errorsArray = [];
+
+  // Define a function to handle the insertion of variant products
+  const insertVariantProduct = (productId, variantId, isLastItem, innerIsLastItem) => {
+    db.query(
+      `SELECT * FROM variant_products WHERE product_id = ? AND variant_id = ?`,
+      [productId, variantId],
+      (selectError, selectResults) => {
+        if (selectError) {
+          errorsArray.push(selectError);
+          // If there's an error in the select query, call the callback with the error
+          if (isLastItem && innerIsLastItem) {
+            return callBack(errorsArray);
+          }
+        } else if (selectResults.length === 0) {
+          // If no matching record is found, insert the new variant product
+          db.query(
+            `INSERT INTO variant_products (product_id, variant_id) VALUES (?, ?)`,
+            [productId, variantId],
+            (insertError, insertResults) => {
+              if (insertError) {
+                errorsArray.push(insertError);
+              } else {
+                resultsArray.push(insertResults);
+              }
+              // If this is the last item in the loop, call the callback with the results and errors
+              if (isLastItem && innerIsLastItem) {
+                return callBack(errorsArray.length ? errorsArray : null, resultsArray);
+              }
+            }
+          );
+        } else {
+          // If a matching record is found, skip to the next iteration
+          if (isLastItem && innerIsLastItem) {
+            return callBack(errorsArray.length ? errorsArray : null, resultsArray);
+          }
+        }
+      }
+    );
+  };
+
+  // Collect all product IDs and variant IDs for deletion
+  let idsForDeletion = [product_id, ...variant_products];
+  let placeholders = idsForDeletion.map(() => '?').join(',');
+
+  // Delete existing variant products for the given product_id and variant_products
   db.query(
-    `DELETE FROM variant_products WHERE product_id = ?`,
-    [product_id],
+    `DELETE FROM variant_products WHERE product_id IN (${placeholders}) OR variant_id IN (${placeholders})`,
+    [...idsForDeletion, ...idsForDeletion],
     (deleteError, deleteResults) => {
       if (deleteError) {
         return callBack(deleteError);
       }
-      variant_products.forEach((variant_id, index) => {
-        db.query(
-          `SELECT * FROM variant_products WHERE product_id = ? AND variant_id = ?`,
-          [product_id, variant_id],
-          (selectError, selectResults) => {
-            if (selectError) {
-              errorsArray.push(selectError);
-              // If there's an error in the select query, call the callback with the error
-              if (index === variant_products.length - 1) {
-                return callBack(errorsArray);
-              }
-            } else if (selectResults.length === 0) {
-              // If no matching record is found, insert the new variant product
-              db.query(
-                `INSERT INTO variant_products (product_id, variant_id) VALUES (?, ?)`,
-                [product_id, variant_id],
-                (insertError, insertResults) => {
-                  if (insertError) {
-                    errorsArray.push(insertError);
-                  } else {
-                    resultsArray.push(insertResults);
-                  }
-                  // If this is the last item in the loop, call the callback with the results and errors
-                  if (index === variant_products.length - 1) {
-                    return callBack(errorsArray.length ? errorsArray : null, resultsArray);
-                  }
-                }
-              );
-            } else {
-              // If a matching record is found, skip to the next iteration
-              if (index === variant_products.length - 1) {
-                return callBack(errorsArray.length ? errorsArray : null, resultsArray);
-              }
+
+      // Loop through each product_id
+      variant_products.forEach((productId, index) => {
+        const isLastItem = index === variant_products.length - 1;
+        
+        // Loop through each variant_id
+        variant_products.forEach((variantId, innerIndex) => {
+          const innerIsLastItem = innerIndex === variant_products.length - 1;
+          if (productId !== variantId) {
+            insertVariantProduct(productId, variantId, isLastItem, innerIsLastItem);
+          } else {
+            if (isLastItem && innerIsLastItem) {
+              return callBack(errorsArray.length ? errorsArray : null, resultsArray);
             }
           }
-        );
+        });
       });
-    });
+    }
+  );
 };
+
 export const updateVariant = (data, id, callBack) => {
   db.query(
     `UPDATE product_variants SET product_id = ?, product_size = ?, product_quantity = ?, product_price = ?, offer_price = ? WHERE id = ?`,
