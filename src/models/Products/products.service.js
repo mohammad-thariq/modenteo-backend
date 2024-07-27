@@ -543,10 +543,10 @@ export const getPrdVariantSize = (id, callBack) => {
 // Product Variants
 
 export const getPrdVariants = (id, callBack) => {
-  const query = ` SELECT p.* FROM variant_products vp INNER JOIN products p ON vp.product_id = p.id WHERE vp.product_id = ? AND vp.variant_id != ? `;
+  const query = ` SELECT vp.variant_id, p.* FROM variant_products vp JOIN products p ON vp.variant_id = p.id WHERE vp.product_id = ?   `;
   db.query(
     query,
-    [id, id],
+    [id],
     (error, results) => {
       if (error) {
         return callBack(error);
