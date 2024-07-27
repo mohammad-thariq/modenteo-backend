@@ -118,11 +118,49 @@ export const getByProductsbyCollection = (id, filters, callBack) => {
     });
   }
 
-  db?.query(query, queryParams, (error, results) => {
+  db.query(query, queryParams, async (error, results) => {
     if (error) {
       return callBack(error);
     }
-    return callBack(null, results);
+  
+    // Process each product
+    try {
+      const productsWithVariants = await Promise.all(results.map(async (product) => {
+        return new Promise((resolve, reject) => {
+          // Fetch product sizes
+          getPrdVariantSize(product.id, (err, size) => {
+            if (err) {
+              console.log(err);
+              return reject({
+                message: "Database connection error",
+              });
+            }
+            
+            // Fetch product variants
+            getPrdVariants(product.id, (err, variant) => {
+              if (err) {
+                console.log(err);
+                return reject({
+                  message: "Database connection error",
+                });
+              }
+              
+              // Return product with sizes and variants
+              resolve({
+                ...product,
+                sizes: size,
+                variants: variant
+              });
+            });
+          });
+        });
+      }));
+      
+      // Return final result
+      return callBack(null, productsWithVariants);
+    } catch (err) {
+      return callBack(err);
+    }
   });
 };
 
@@ -183,11 +221,49 @@ export const getByProductsbyCollectionID = (id, filters, callBack) => {
     });
   }
 
-  db.query(query, queryParams, (error, results) => {
+  db.query(query, queryParams, async (error, results) => {
     if (error) {
       return callBack(error);
     }
-    return callBack(null, results);
+  
+    // Process each product
+    try {
+      const productsWithVariants = await Promise.all(results.map(async (product) => {
+        return new Promise((resolve, reject) => {
+          // Fetch product sizes
+          getPrdVariantSize(product.id, (err, size) => {
+            if (err) {
+              console.log(err);
+              return reject({
+                message: "Database connection error",
+              });
+            }
+            
+            // Fetch product variants
+            getPrdVariants(product.id, (err, variant) => {
+              if (err) {
+                console.log(err);
+                return reject({
+                  message: "Database connection error",
+                });
+              }
+              
+              // Return product with sizes and variants
+              resolve({
+                ...product,
+                sizes: size,
+                variants: variant
+              });
+            });
+          });
+        });
+      }));
+      
+      // Return final result
+      return callBack(null, productsWithVariants);
+    } catch (err) {
+      return callBack(err);
+    }
   });
 };
 
@@ -260,11 +336,49 @@ export const getByProductsbyCategoryID = (id, filters, callBack) => {
     });
   }
 
-  db.query(query, queryParams, (error, results) => {
+  db.query(query, queryParams, async (error, results) => {
     if (error) {
       return callBack(error);
     }
-    return callBack(null, results);
+  
+    // Process each product
+    try {
+      const productsWithVariants = await Promise.all(results.map(async (product) => {
+        return new Promise((resolve, reject) => {
+          // Fetch product sizes
+          getPrdVariantSize(product.id, (err, size) => {
+            if (err) {
+              console.log(err);
+              return reject({
+                message: "Database connection error",
+              });
+            }
+            
+            // Fetch product variants
+            getPrdVariants(product.id, (err, variant) => {
+              if (err) {
+                console.log(err);
+                return reject({
+                  message: "Database connection error",
+                });
+              }
+              
+              // Return product with sizes and variants
+              resolve({
+                ...product,
+                sizes: size,
+                variants: variant
+              });
+            });
+          });
+        });
+      }));
+      
+      // Return final result
+      return callBack(null, productsWithVariants);
+    } catch (err) {
+      return callBack(err);
+    }
   });
 };
 
