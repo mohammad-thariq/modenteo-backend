@@ -17,7 +17,7 @@ export const getUploadFile = (req, table_name, callBack) => {
     const binaryData = Buffer.from(base64Data, "base64");
 
     const uploadParams = {
-      Bucket: "modenteo-file",
+      Bucket: "modenteo",
       Key: `${table_name}-${imgName}`,
       Body: binaryData,
       ContentEncoding: "base64",
@@ -65,13 +65,15 @@ export const getUploadFile = (req, table_name, callBack) => {
       }
 
       const uploadParams = {
-        Bucket: "modenteo-file",
+        Bucket: "modenteo",
         Key: `${table_name}-${imgName}`,
         Body: data,
         ContentType: sampleFile.mimetype,
       };
 
       s3.upload(uploadParams, (err, data) => {
+        console.log(err, 'error');
+        
         if (err) {
           return callBack({
             error: "Problem in Uploading Image",
