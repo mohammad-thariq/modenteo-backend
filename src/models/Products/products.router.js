@@ -15,7 +15,7 @@ import {
   getProductsBySubCat,
   getProductsByBrand,
   getProductsByCollection,
-  getProductsByMainCategory, getVariants, createVariants, createorUpdateVariants, updateVariants, deleteVariants, getVariantSizes,getProductVariants, getProductsList, createVariantSizes, deleteVariantSizes, updateVariantSizes
+  getProductsByMainCategory, getVariants, createVariants, createorUpdateVariants, updateVariants, deleteVariants, getVariantSizes,getProductVariants, getProductsList, createVariantSizes, deleteVariantSizes, updateVariantSizes, productSearch
 } from "./products.controller.js";
 
 const router = express.Router();
@@ -50,5 +50,6 @@ router.get("/variants-sizes", getVariantSizes);
 router.post("/variants-sizes/create", createVariantSizes);
 router.patch("/variants-sizes/update/:id", updateVariantSizes);
 router.delete("/variants-sizes/delete/:id", deleteVariantSizes);
+router.get("/search-products/:searchTerm", productSearch);
 
 export default router;

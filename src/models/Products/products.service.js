@@ -799,3 +799,44 @@ export const deleteVariantSize = (data, callBack) => {
     }
   );
 };
+export const searchProducts = (searchTerm, callBack) => {
+  // Base SQL query to join products with related tables
+  let sqlQuery = `
+    SELECT p.id, p.image, p.short_name, p.gallery, p.name, p.slug, p.category_id, 
+           p.sub_category_id, p.collection_id, p.brand_id, p.sku, p.color, 
+           p.short_description, p.long_description, p.status, p.seo_title, 
+           p.seo_description, p.top_product, p.new_arrival, p.featured_product, 
+           p.best_product, c.name AS category_name, co.name AS collection_name, 
+           b.name AS brand_name, sc.name AS sub_category_name 
+    FROM products p
+    LEFT JOIN categories c ON p.category_id = c.id
+    LEFT JOIN collections co ON p.collection_id = co.id
+    LEFT JOIN brands b ON p.brand_id = b.id
+    LEFT JOIN sub_categories sc ON p.sub_category_id = sc.id
+    WHERE (
+      p.name LIKE ? OR
+      p.slug LIKE ? OR
+      p.sku LIKE ? OR
+      p.color LIKE ? OR
+      p.short_description LIKE ? OR
+      p.long_description LIKE ? OR
+      c.name LIKE ? OR
+      co.name LIKE ? OR
+      b.name LIKE ? OR
+      sc.name LIKE ?
+    )`;
+
+  // Prepare the search value with wildcards for LIKE
+  const wildcardSearchTerm = `%${searchTerm}%`;
+
+  // Create an array to hold the search values
+  const queryValues = Array(10).fill(wildcardSearchTerm); // 10 times for each LIKE clause
+
+  // Execute the query
+  db.query(sqlQuery, queryValues, (error, results) => {
+    if (error) {
+      return callBack(error);
+    }
+    return callBack(null, results);
+  });
+};

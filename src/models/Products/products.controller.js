@@ -14,7 +14,7 @@ import {
   updateProducts,
   getByProductsSubcatId,
   getByProductsbyCategoryID,
-  getByProductsbyBrandID, getVariantsbyProductID, createVariant, createPrdVariant, updateVariant, deleteVariant, getProductVariant, getProductList, getVariantSize, createVariantSize, updateVariantSize, deleteVariantSize, getPrdVariantSize, getPrdVariants
+  getByProductsbyBrandID, getVariantsbyProductID, createVariant, createPrdVariant, updateVariant, deleteVariant, getProductVariant, getProductList, getVariantSize, createVariantSize, updateVariantSize, deleteVariantSize, getPrdVariantSize, getPrdVariants, searchProducts
 } from "./products.service.js";
 import { getValidateByName } from "../../middleware/validateName/validateName.js";
 import { getBySubCategorySlug } from "../SubCategories/subCategories.service.js";
@@ -432,7 +432,7 @@ export const getProductsByBrand = (req, res) => {
 
 export const getProductsByMainCategory = (req, res) => {
   const id = req.params.id;
-  getByProductsbyCategoryID(id,null, (err, results) => {
+  getByProductsbyCategoryID(id, null, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -781,3 +781,22 @@ export const deleteVariantSizes = (req, res) => {
     });
   });
 };
+
+export const productSearch = (req, res) => {
+  const searchTerm = req.params.searchTerm;
+  searchProducts(searchTerm, (error, results) => {
+    if (error) {
+      return res.status(404).json({
+        success: 0,
+        message: error
+      });
+    } else {
+      return res.status(200).json({
+        success: 1,
+        results: results
+      });
+    }
+  });
+
+}
+
